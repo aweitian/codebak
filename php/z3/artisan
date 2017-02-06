@@ -6,7 +6,31 @@
  * 依赖:
  */
 define ( 'DIR', __DIR__ );
-function extractHumanUnitFuncTxt($r = true) {
+define ( 'VER',1.1);
+if (! isset ( $argv )) 
+{
+	exit ( "RUN CLI MODE." );
+}
+run($argv);
+
+function help() 
+{
+	print(
+		pgbk('
+artisan (ver:'.VER.')
+=====================================		
+	uid [-a] [uid|zg]
+	modifyCommonHeroesBalance +5|-5	
+		
+		')
+	
+	);
+	
+}
+
+
+function extractHumanUnitFuncTxt($r = true) 
+{
 	if ($path = hitCache ( "Units\HumanUnitFunc.txt" )) {
 		echo 'cache hint...' . "\n";
 		return $path;
@@ -15,14 +39,79 @@ function extractHumanUnitFuncTxt($r = true) {
 	exec ( 'cd cache && rename HumanUnitFunc.txt ' . md5 ( 'Units\HumanUnitFunc.txt' ) );
 	return $r && extractHumanUnitFuncTxt ( false );
 }
-function hitCache($str) {
+function hitCache($str) 
+{
 	$c = DIR . "/cache/" . md5 ( $str );
 	if (file_exists ( $c ))
 		return $c;
 	return "";
 }
-function run() {
+
+function uid($a)
+{
+	$l = count($a);
+	if($l == 0)
+	{
+		
+	}
 }
+function modifyCommonHeroesBalance()
+{
+	
+}
+
+function run($a) 
+{
+	$l = count($a);
+	if($l < 2)
+	{
+		help();
+	} 
+	else 
+	{
+		if(function_exists($a[1]))
+		{
+			call_user_func($a[1],array_slice($a, 2));
+		}
+		else
+		{
+			help();
+		}
+	}
+}
+
+// $test = ini ( extractHumanUnitFuncTxt () );
+// foreach ( $test as $key => $val ) {
+// print $key . " : " . pgbk ( $val ["Name"] ) . "\n";
+// }
+
+// $test = new mpq();
+// $test->showlist();
+
+// 先从MPQ文件中取出units\balances.slk
+
+//$mpq = new mpq ();
+
+// $mpq->showlist();exit;
+
+//$mpq->get ( "units\\unitbalance.slk" ); // 测试成功
+//exit;
+//$excel = new excel ();
+//$excel->openxls ( $mpq->getCachePath ( "units\\unitbalance.slk" ) );
+//print $excel->getCell ( 2, 2 ); // 5 test ok
+
+//$excel->setCell ( 2, 2, 50 );
+//$excel->save ();
+//$excel->closexls ();
+
+//$mpq->replace ( $mpq->getCachePath ( "units\\unitbalance.slk" ), "units\\unitbalance.slk" );//test ok
+
+
+// =============================================================================
+//
+// 开始LIB模块
+//
+// =============================================================================
 function ini($file) {
 	$ret = array ();
 	$key = "";
@@ -46,38 +135,6 @@ function ini($file) {
 	return $ret;
 }
 
-// $test = ini ( extractHumanUnitFuncTxt () );
-// foreach ( $test as $key => $val ) {
-// print $key . " : " . pgbk ( $val ["Name"] ) . "\n";
-// }
-
-// $test = new mpq();
-// $test->showlist();
-
-// 先从MPQ文件中取出units\balances.slk
-
-$mpq = new mpq ();
-
-// $mpq->showlist();exit;
-
-$mpq->get ( "units\\unitbalance.slk" ); // 测试成功
-exit;
-$excel = new excel ();
-$excel->openxls ( $mpq->getCachePath ( "units\\unitbalance.slk" ) );
-print $excel->getCell ( 2, 2 ); // 5 test ok
-
-$excel->setCell ( 2, 2, 50 );
-$excel->save ();
-$excel->closexls ();
-
-$mpq->replace ( $mpq->getCachePath ( "units\\unitbalance.slk" ), "units\\unitbalance.slk" );//test ok
-
-
-// =============================================================================
-//
-// 开始LIB模块
-//
-// =============================================================================
 function msg($str) {
 	print pgbk ( $str ) . "\n";
 }
