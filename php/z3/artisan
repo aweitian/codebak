@@ -20,7 +20,7 @@ function help()
 artisan (ver:'.VER.')
 =====================================		
 	uid [-a] [uid|zg]
-	modifyCommonHeroesBalance +5|-5	
+	modifyCommonHeroesBalance all|wg|sg|h004 +5|-5	
 		
 		')
 	
@@ -32,10 +32,10 @@ artisan (ver:'.VER.')
 function extractHumanUnitFuncTxt($r = true) 
 {
 	if ($path = hitCache ( "Units\HumanUnitFunc.txt" )) {
-		echo 'cache hint...' . "\n";
+		//echo 'cache hint...' . "\n";
 		return $path;
 	}
-	exec ( DIR . "/bin/mpq2k.exe e " . file_get_contents ( DIR . "/.map" ) . " Units\HumanUnitFunc.txt cache" );
+	exec ( "\"".DIR . "\\bin\\mpq2k.exe\" e " . file_get_contents ( DIR . "/.map" ) . " Units\HumanUnitFunc.txt cache" );
 	exec ( 'cd cache && rename HumanUnitFunc.txt ' . md5 ( 'Units\HumanUnitFunc.txt' ) );
 	return $r && extractHumanUnitFuncTxt ( false );
 }
@@ -52,14 +52,166 @@ function uid($a)
 	$l = count($a);
 	if($l == 0)
 	{
-		
+		foreach (getWeigouHeroesId() as $hero) 
+		{
+		 	 msg($hero . " " . getHeroName($hero)); 
+		} 
+		msg('----------');
+		foreach (getShugouHeroesId() as $hero) 
+		{
+		 	 msg($hero . " " . getHeroName($hero)); 
+		} 
+
 	}
 }
-function modifyCommonHeroesBalance()
+function modifyCommonHeroesBalance($a)
 {
+	$mpq = new mpq ();
+	$mpq->get ( "units\\unitbalance.slk" );
+	$excel = new excel ();
+	$excel->openxls ( $mpq->getCachePath ( "units\\unitbalance.slk" ) );
+	$write = false;
+	$l = count($a);
 	
+	if($l == 0)
+	{
+		modifyCommonHeroesBalance(array('wg'));
+		modifyCommonHeroesBalance(array('sg')); 		
+	}
+	else if($l == 1)
+	{
+		switch($a[0])
+		{
+			case "all":
+				modifyCommonHeroesBalance(array());
+				break;
+			case "wg":
+				foreach (getWeigouHeroesId() as $hero) 
+				{
+				 	 $index =  $excel->findRows($hero);
+				 	 msg("--".getHeroName($hero)." 力量成长:".$excel->getCell($index,38)
+				 	 .",敏捷成长:".$excel->getCell($index,40).",智力成长:".$excel->getCell($index,39));
+				} 
+				break;
+			case "sg":
+				foreach (getShugouHeroesId() as $hero) 
+				{
+				 	 $index =  $excel->findRows($hero);
+				 	 msg("--".getHeroName($hero)." 力量成长:".$excel->getCell($index,38)
+				 	 .",敏捷成长:".$excel->getCell($index,40).",智力成长:".$excel->getCell($index,39));
+				} 
+				break;
+			default:
+				help();
+		}
+		
+	}
+	else if($l == 2)
+	{
+		if(preg_match("/^\+(\d+)$/",$a[1],$m))
+		{
+			$plus = $m[1];
+		}
+		else if(preg_match("/^\-\d+$/",$a[1],$m)) 
+		{
+			$plus = -1 * $m[1];
+		}
+		else
+		{
+			help();
+			return;
+		}
+
+		switch($a[0])
+		{
+			case "all":
+				foreach (getWeigouHeroesId() as $hero) 
+				{
+				 	 $index =  $excel->findRows($hero);
+				 	 $str = $excel->getCell($index,38) + $plus;
+				 	 $int = $excel->getCell($index,39) + $plus;
+				 	 $agi = $excel->getCell($index,40) + $plus;
+				 	 $excel->setCell($index,38,$str);
+				 	 $excel->setCell($index,39,$int);
+				 	 $excel->setCell($index,40,$agi);
+				 	 msg("正在设置:".getHeroName($hero) . "str:".$str.",int:".$int.",agi:".$agi );
+				} 
+				foreach (getShugouHeroesId() as $hero) 
+				{
+				 	 $index =  $excel->findRows($hero);
+				 	 $str = $excel->getCell($index,38) + $plus;
+				 	 $int = $excel->getCell($index,39) + $plus;
+				 	 $agi = $excel->getCell($index,40) + $plus;
+				 	 $excel->setCell($index,38,$str);
+				 	 $excel->setCell($index,39,$int);
+				 	 $excel->setCell($index,40,$agi);
+				 	 msg("正在设置:".getHeroName($hero) . "str:".$str.",int:".$int.",agi:".$agi );
+				} 
+				$excel->save();
+				$write = true;
+				break;
+			case "wg":
+				foreach (getWeigouHeroesId() as $hero) 
+				{
+				 	 $index =  $excel->findRows($hero);
+				 	 $str = $excel->getCell($index,38) + $plus;
+				 	 $int = $excel->getCell($index,39) + $plus;
+				 	 $agi = $excel->getCell($index,40) + $plus;
+				 	 $excel->setCell($index,38,$str);
+				 	 $excel->setCell($index,39,$int);
+				 	 $excel->setCell($index,40,$agi);
+				 	 msg("正在设置:".getHeroName($hero) . "str:".$str.",int:".$int.",agi:".$agi );
+				}
+				$excel->save();
+				$write = true;
+				break;
+			case "sg":
+				foreach (getShugouHeroesId() as $hero) 
+				{
+				 	 $index =  $excel->findRows($hero);
+				 	 $str = $excel->getCell($index,38) + $plus;
+				 	 $int = $excel->getCell($index,39) + $plus;
+				 	 $agi = $excel->getCell($index,40) + $plus;
+				 	 $excel->setCell($index,38,$str);
+				 	 $excel->setCell($index,39,$int);
+				 	 $excel->setCell($index,40,$agi);
+				 	 msg("正在设置:".getHeroName($hero) . "str:".$str.",int:".$int.",agi:".$agi );
+				}  
+				$excel->save();
+				$write = true;
+				break;
+			default:
+				help();
+		}
+	}
+	else 
+	{
+	 	help();
+	}
+	
+	$excel->closexls ();
+	if($write)
+	{
+		$mpq->replace ( $mpq->getCachePath ( "units\\unitbalance.slk" ), "units\\unitbalance.slk" );
+	}
+}
+function getHeroName($id)
+{
+	$data = ini ( extractHumanUnitFuncTxt () );
+	if(array_key_exists($id,$data)) {
+		return $data[$id]["Name"];
+	}
+	return "";	
+}
+function getWeigouHeroesId()
+{
+	return array('U00A','U00I','U000','H006','U007');
 }
 
+function getShugouHeroesId()
+{
+	return array('H008','O003','O002','H004','E000');
+}
 function run($a) 
 {
 	$l = count($a);
@@ -222,31 +374,31 @@ class mpq {
 		if (is_null ( $path )) {
 			$path = file_get_contents ( DIR . "/.map" );
 		}
-		msg ( "Debug: map path is " . $path );
+		//msg ( "Debug: map path is " . $path );
 		$this->path = $path;
 	}
 	public function get($path) {
 		try {
 			$this->getCachePath ( $path );
-			msg ( "Cache: " . $path );
+			//msg ( "Cache: " . $path );
 			return;
 		} catch ( Exception $e ) {
 		}
-		system ( DIR . "/bin/mpq2k.exe e " . $this->path . " " . $path . " cache" );
+		system ( "\"".DIR . "\\bin\\mpq2k.exe\" e " . $this->path . " " . $path . " cache" );
 		$this->cache ( $path );
 	}
 	public function add($src, $dst) {
-		system ( DIR . "/bin/mpq2k.exe a " . $this->path . " " . $src . " " . $dst . " /c" );
+		system ( "\"".DIR . "\\bin\\mpq2k.exe\" a " . $this->path . " \"" . $src . "\" " . $dst . " /c" );
 	}
 	public function replace($src, $dst) {
 		$this->remove ( $dst );
 		$this->add ( $src, $dst );
 	}
 	public function remove($path) {
-		system ( DIR . "/bin/mpq2k.exe d " . $this->path . " " . $path . "" );
+		system ( "\"".DIR . "\\bin\\mpq2k.exe\" d " . $this->path . " " . $path . "" );
 	}
 	public function showlist() {
-		system ( DIR . "/bin/mpq2k.exe l " . $this->path );
+		system ( "\"".DIR . "\\bin\\mpq2k.exe\" l " . $this->path );
 	}
 	public function getCachePath($path) {
 		$path = DIR . "\\cache\\" . md5 ( $path ) . "." . pathinfo ( $path, PATHINFO_EXTENSION );
