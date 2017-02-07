@@ -1,0 +1,11 @@
+<?php
+function aa()
+{
+	$bbc = 2;
+	function bb()
+	{
+		return 1 + $bbc;
+	}
+	return bb();
+}
+print aa();

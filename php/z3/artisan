@@ -11,6 +11,10 @@ if (! isset ( $argv ))
 {
 	exit ( "RUN CLI MODE." );
 }
+$alias = array(
+	"mb" => "modifyCommonHeroesBalance",
+);
+
 run($argv);
 
 function help() 
@@ -20,7 +24,7 @@ function help()
 artisan (ver:'.VER.')
 =====================================		
 	uid [-a] [uid|zg]
-	modifyCommonHeroesBalance all|wg|sg|h004 +5|-5	
+	mb  all|wg|sg|h004 +5|-5	#modifyCommonHeroesBalance
 		
 		')
 	
@@ -72,34 +76,31 @@ function modifyCommonHeroesBalance($a)
 	$excel->openxls ( $mpq->getCachePath ( "units\\unitbalance.slk" ) );
 	$write = false;
 	$l = count($a);
-	
+	$m = function ($data) use ($excel,$mpq)
+	{
+		foreach ($data as $hero) 
+		{
+		 	 $index =  $excel->findRows($hero);
+		 	 msg("--".getHeroName($hero)." str plus:".$excel->getCell($index,38)
+		 	 .",agi plus:".$excel->getCell($index,40).",int plus:".$excel->getCell($index,39));
+		} 	
+	};
 	if($l == 0)
 	{
-		modifyCommonHeroesBalance(array('wg'));
-		modifyCommonHeroesBalance(array('sg')); 		
+		$m(array_merge(getWeigouHeroesId(),getShugouHeroesId()));
 	}
 	else if($l == 1)
 	{
 		switch($a[0])
 		{
 			case "all":
-				modifyCommonHeroesBalance(array());
+				$m(array_merge(getWeigouHeroesId(),getShugouHeroesId()));
 				break;
 			case "wg":
-				foreach (getWeigouHeroesId() as $hero) 
-				{
-				 	 $index =  $excel->findRows($hero);
-				 	 msg("--".getHeroName($hero)." 力量成长:".$excel->getCell($index,38)
-				 	 .",敏捷成长:".$excel->getCell($index,40).",智力成长:".$excel->getCell($index,39));
-				} 
+				$m(getWeigouHeroesId());
 				break;
 			case "sg":
-				foreach (getShugouHeroesId() as $hero) 
-				{
-				 	 $index =  $excel->findRows($hero);
-				 	 msg("--".getHeroName($hero)." 力量成长:".$excel->getCell($index,38)
-				 	 .",敏捷成长:".$excel->getCell($index,40).",智力成长:".$excel->getCell($index,39));
-				} 
+				$m(getShugouHeroesId());
 				break;
 			default:
 				help();
@@ -214,6 +215,7 @@ function getShugouHeroesId()
 }
 function run($a) 
 {
+	global $alias;
 	$l = count($a);
 	if($l < 2)
 	{
@@ -224,6 +226,10 @@ function run($a)
 		if(function_exists($a[1]))
 		{
 			call_user_func($a[1],array_slice($a, 2));
+		}
+		else if(isset($alias[$a[1]]) && function_exists($alias[$a[1]]))
+		{
+			call_user_func($alias[$a[1]],array_slice($a, 2));
 		}
 		else
 		{
