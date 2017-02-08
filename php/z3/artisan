@@ -24,7 +24,7 @@ function help()
 artisan (ver:'.VER.')
 =====================================		
 	uid [-a] [uid|zg]
-	mb  all|wg|sg|h004 +5|-5	#modifyCommonHeroesBalance
+	mb  all|wg|sg|h004,h008 +5|-5	#modifyCommonHeroesBalance
 		
 		')
 	
@@ -76,13 +76,27 @@ function modifyCommonHeroesBalance($a)
 	$excel->openxls ( $mpq->getCachePath ( "units\\unitbalance.slk" ) );
 	$write = false;
 	$l = count($a);
-	$m = function ($data) use ($excel,$mpq)
+	$r = function ($data) use ($excel,$mpq)
 	{
 		foreach ($data as $hero) 
 		{
 		 	 $index =  $excel->findRows($hero);
 		 	 msg("--".getHeroName($hero)." str plus:".$excel->getCell($index,38)
 		 	 .",agi plus:".$excel->getCell($index,40).",int plus:".$excel->getCell($index,39));
+		} 	
+	};
+	$w = function ($data,$plus) use ($excel,$mpq)
+	{
+		foreach ($data as $hero) 
+		{
+		 	 $index =  $excel->findRows($hero);
+		 	 $str = $excel->getCell($index,38) + $plus;
+		 	 $int = $excel->getCell($index,39) + $plus;
+		 	 $agi = $excel->getCell($index,40) + $plus;
+		 	 $excel->setCell($index,38,$str);
+		 	 $excel->setCell($index,39,$int);
+		 	 $excel->setCell($index,40,$agi);
+		 	 msg("正在设置:".getHeroName($hero) . "str:".$str.",int:".$int.",agi:".$agi );
 		} 	
 	};
 	if($l == 0)
@@ -94,16 +108,17 @@ function modifyCommonHeroesBalance($a)
 		switch($a[0])
 		{
 			case "all":
-				$m(array_merge(getWeigouHeroesId(),getShugouHeroesId()));
+				$r(array_merge(getWeigouHeroesId(),getShugouHeroesId()));
 				break;
 			case "wg":
-				$m(getWeigouHeroesId());
+				$r(getWeigouHeroesId());
 				break;
 			case "sg":
-				$m(getShugouHeroesId());
+				$r(getShugouHeroesId());
 				break;
 			default:
-				help();
+				$r(explode(",",$a[0]));
+				break;
 		}
 		
 	}
@@ -126,63 +141,25 @@ function modifyCommonHeroesBalance($a)
 		switch($a[0])
 		{
 			case "all":
-				foreach (getWeigouHeroesId() as $hero) 
-				{
-				 	 $index =  $excel->findRows($hero);
-				 	 $str = $excel->getCell($index,38) + $plus;
-				 	 $int = $excel->getCell($index,39) + $plus;
-				 	 $agi = $excel->getCell($index,40) + $plus;
-				 	 $excel->setCell($index,38,$str);
-				 	 $excel->setCell($index,39,$int);
-				 	 $excel->setCell($index,40,$agi);
-				 	 msg("正在设置:".getHeroName($hero) . "str:".$str.",int:".$int.",agi:".$agi );
-				} 
-				foreach (getShugouHeroesId() as $hero) 
-				{
-				 	 $index =  $excel->findRows($hero);
-				 	 $str = $excel->getCell($index,38) + $plus;
-				 	 $int = $excel->getCell($index,39) + $plus;
-				 	 $agi = $excel->getCell($index,40) + $plus;
-				 	 $excel->setCell($index,38,$str);
-				 	 $excel->setCell($index,39,$int);
-				 	 $excel->setCell($index,40,$agi);
-				 	 msg("正在设置:".getHeroName($hero) . "str:".$str.",int:".$int.",agi:".$agi );
-				} 
+				$w(array_merge(getWeigouHeroesId(),getShugouHeroesId()),$plus);
 				$excel->save();
 				$write = true;
 				break;
 			case "wg":
-				foreach (getWeigouHeroesId() as $hero) 
-				{
-				 	 $index =  $excel->findRows($hero);
-				 	 $str = $excel->getCell($index,38) + $plus;
-				 	 $int = $excel->getCell($index,39) + $plus;
-				 	 $agi = $excel->getCell($index,40) + $plus;
-				 	 $excel->setCell($index,38,$str);
-				 	 $excel->setCell($index,39,$int);
-				 	 $excel->setCell($index,40,$agi);
-				 	 msg("正在设置:".getHeroName($hero) . "str:".$str.",int:".$int.",agi:".$agi );
-				}
+				$w(getWeigouHeroesId(),$plus);
 				$excel->save();
 				$write = true;
 				break;
 			case "sg":
-				foreach (getShugouHeroesId() as $hero) 
-				{
-				 	 $index =  $excel->findRows($hero);
-				 	 $str = $excel->getCell($index,38) + $plus;
-				 	 $int = $excel->getCell($index,39) + $plus;
-				 	 $agi = $excel->getCell($index,40) + $plus;
-				 	 $excel->setCell($index,38,$str);
-				 	 $excel->setCell($index,39,$int);
-				 	 $excel->setCell($index,40,$agi);
-				 	 msg("正在设置:".getHeroName($hero) . "str:".$str.",int:".$int.",agi:".$agi );
-				}  
+				$w(getShugouHeroesId(),$plus);
 				$excel->save();
 				$write = true;
 				break;
 			default:
-				help();
+				$w(explode(",",$a[0]),$plus);
+				$excel->save();
+				$write = true;
+				break;
 		}
 	}
 	else 
