@@ -19,13 +19,23 @@ else
 	switch($cmd)
 	{
 		case 'genkey':
-			print keyGen::g();
+			if(isset($argv[2]) && $argv[2] == '-php')
+			{
+				print '<?php return \''.keyGen::g().'\';';
+				break;
+			}
+			else
+			{
+				print keyGen::g();
+				break;
+			}
+			
 			break;
 		case 'encode':
 			if(isset($argv[2]))
 			{
 				$code = new code($argv[2]);
-				$code->encode();
+				print $code->encode();
 				break;
 			}
 			else
@@ -37,7 +47,7 @@ else
 			if(isset($argv[2]))
 			{
 				$code = new code($argv[2]);
-				$code->decode();
+				var_dump($code->decode());
 				break;
 			}
 			else
@@ -45,6 +55,18 @@ else
 				help();
 				break;
 			}
+		case 'updateApiKey':
+			$code = new code(require "apikey.php");
+			$ret = updateApiKey($code->encode());
+			if($ret)
+			{
+				print "ok\n";
+			}
+			else
+			{
+				print "Error...\n";
+			}
+			break;
 		default:	
 			help();
 			break;
@@ -56,9 +78,10 @@ function help()
 php artisan help ver 1.1
 -------------------------------------
 	help
-	genkey > .apikey
+	genkey -php > apikey.php
 	encode data | clip
 	decode data
+	updateApiKey
 	');
 }
 function u2g($str)
@@ -86,8 +109,8 @@ class keyGen
 class code {
 	private $data;
 	public function __construct($data) {
-		if(!file_exists(".apikey")){
-			throw new exception(u2g("缺少.apikey文件"));
+		if(!file_exists("apikey.php")){
+			throw new exception(u2g("缺少apikey文件"));
 		}
 		$this->data = $data;
 		/*
@@ -121,7 +144,7 @@ class code {
 		}
 		//2.把数据变成ASCII数组
 		$i = 0;
-		$apikey = str_pad(file_get_contents(".apikey"),2);
+		$apikey = str_pad(require("apikey.php"),2);
 		$arr = array();
 		foreach($rawData as $char)
 		{
@@ -152,37 +175,54 @@ class code {
 		}
 		
 		//7.进行整个数组和0x2d异或,得到的数组
-		print '';
 		$arr = [];
 
 		foreach($data as $char)
 		{
 			$arr[] = str_pad( dechex($char ^ 0x2d) ,2, "0", STR_PAD_LEFT). "";
 		}
-		print join("",$arr);
-		print '';
+		return join("",$arr);
 	}
 	public function decode() {
-		print $this->data;
+		//print $this->data;
 		$data = str_split($this->data,2);
 		$data = array_map(function($code){
 			return hexdec($code)  ^ 0x2d;
 		},$data);
 
-		print ("version:".$data[0])."\n";
-		print ("key length::".($data[1] ^ 0x38))."\n";
-		print ("data length:".(($data[2] ^ 0x67) - ($data[1] ^ 0x38) - 3) )."\n";
+		//print ("version:".$data[0])."\n";
+		//print ("key length::".($data[1] ^ 0x38))."\n";
+		//print ("data length:".(($data[2] ^ 0x67) - ($data[1] ^ 0x38) - 3) )."\n";
 		$key = array_slice($data,3,$data[1] ^ 0x38);
 
 		$arr = array_slice($data,3+($data[1] ^ 0x38),(($data[2] ^ 0x67) - ($data[1] ^ 0x38) - 3));
-		print ("content:")."\n-----------------------------------\n";
-		$apikey = str_pad(file_get_contents(".apikey"),2);
+		//print ("content:")."\n-----------------------------------\n";
+		$apikey = str_pad(require("apikey.php"),2);
 		$ret = '';
 		for($i=0;$i<count($arr);$i++)
 		{
 			$ret .= chr( ($arr[$i] ^ $key[$i % count($key)]) ^ dechex($apikey[$i % count($apikey)]) );
 		}
 
-		var_dump(json_decode(base64_decode($ret),true));
+		return json_decode(base64_decode($ret),true);
 	}
+}
+
+/***
+  * 数据内容和.apikey内容一样
+  */
+function updateApiKey($data)
+{
+	$code = new code($data);
+	$apik = require "apikey.php";
+	$decode = $code->decode();
+	if($decode && $decode == $apik)
+	{
+		$ret = file_put_contents("apikey.php", '<?php return \''.keyGen::g().'\';');
+	}
+	else
+	{
+		$ret = 0;
+	}
+	return $ret;
 }
