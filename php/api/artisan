@@ -1,0 +1,188 @@
+<?php
+/**
+ * author: 	awei.tian
+ * date:	2017-2-11
+ * 说明:	
+ *			用于两个服务器之间API通信，其中包括数据更新
+ *			密钥更新，生成密钥
+ *			代码包含加密算法，算法保密
+ *
+ */
+if(PHP_SAPI != "cli") exit("run in cli environment");
+if($argc <= 1)
+{
+	help();
+}
+else 
+{
+	$cmd = $argv[1];
+	switch($cmd)
+	{
+		case 'genkey':
+			print keyGen::g();
+			break;
+		case 'encode':
+			if(isset($argv[2]))
+			{
+				$code = new code($argv[2]);
+				$code->encode();
+				break;
+			}
+			else
+			{
+				help();
+				break;
+			}
+		case 'decode':
+			if(isset($argv[2]))
+			{
+				$code = new code($argv[2]);
+				$code->decode();
+				break;
+			}
+			else
+			{
+				help();
+				break;
+			}
+		default:	
+			help();
+			break;
+	}
+}
+function help()
+{
+	print u2g('
+php artisan help ver 1.1
+-------------------------------------
+	help
+	genkey > .apikey
+	encode data | clip
+	decode data
+	');
+}
+function u2g($str)
+{
+	return iconv('UTF-8','GBK',$str);
+}
+
+
+class keyGen
+{
+	/**
+	 * 密钥格式为128个16进制字符串
+	 *
+	 */
+	public static function g()
+	{
+		return array_reduce(array_map(function($a){
+			return rand(0,255);
+		},array_fill(0,64,0)),function($last,$val){
+			return $last . str_pad(dechex($val),2,'0',STR_PAD_LEFT) ;
+		},'');
+	}
+}
+
+class code {
+	private $data;
+	public function __construct($data) {
+		if(!file_exists(".apikey")){
+			throw new exception(u2g("缺少.apikey文件"));
+		}
+		$this->data = $data;
+		/*
+		$this->data = [
+			"taw" => "tiananwei",
+			"hyp" => "huyinping"
+		];
+		*/
+	}
+	public function encode() {
+		
+		//1.生成1-16个随机密钥
+		$a = base64_encode(json_encode($this->data));
+		$rawData = str_split($a);
+		$datalen = count($rawData);
+		$key = [];
+		if($datalen < 8)
+		{
+			$key_min_len = 1;
+			$l = rand(0,4);
+		}
+		else
+		{
+			$key_min_len = 8;
+			$l = rand(0,8);
+		}
+		
+		for($i=0;$i<$key_min_len+$l;$i++)
+		{
+			$key[] = rand(0,255);
+		}
+		//2.把数据变成ASCII数组
+		$i = 0;
+		$apikey = str_pad(file_get_contents(".apikey"),2);
+		$arr = array();
+		foreach($rawData as $char)
+		{
+			$arr[] = ord($char) ^ hexdec($apikey[$i % count($apikey)]);
+			$i++;
+		}
+		//3.算出KEY长度，数组总长度
+		$key_len = $l + $key_min_len;
+		$totalen = $key_len + 3 + $datalen;
+		$padding = ceil($totalen / 8) * 8 - $totalen;
+		
+		//4.把密钥和数据异或
+		$i = 0;
+		foreach($arr as $k => $char)
+		{
+			$arr[$k] = $char ^ $key[$i % $key_len] ;
+			$i++;
+		}
+		
+		//5.填充数据
+		$data = [0x2,$key_len ^ 0x38,$totalen ^ 0x67];
+		$data = array_merge($data,$key,$arr);
+		
+		//6.对齐数组，按8位
+		for($i=0;$i<$padding;$i++)
+		{
+			$data[] =  rand(0,255);
+		}
+		
+		//7.进行整个数组和0x2d异或,得到的数组
+		print '';
+		$arr = [];
+
+		foreach($data as $char)
+		{
+			$arr[] = str_pad( dechex($char ^ 0x2d) ,2, "0", STR_PAD_LEFT). "";
+		}
+		print join("",$arr);
+		print '';
+	}
+	public function decode() {
+		print $this->data;
+		$data = str_split($this->data,2);
+		$data = array_map(function($code){
+			return hexdec($code)  ^ 0x2d;
+		},$data);
+
+		print ("version:".$data[0])."\n";
+		print ("key length::".($data[1] ^ 0x38))."\n";
+		print ("data length:".(($data[2] ^ 0x67) - ($data[1] ^ 0x38) - 3) )."\n";
+		$key = array_slice($data,3,$data[1] ^ 0x38);
+
+		$arr = array_slice($data,3+($data[1] ^ 0x38),(($data[2] ^ 0x67) - ($data[1] ^ 0x38) - 3));
+		print ("content:")."\n-----------------------------------\n";
+		$apikey = str_pad(file_get_contents(".apikey"),2);
+		$ret = '';
+		for($i=0;$i<count($arr);$i++)
+		{
+			$ret .= chr( ($arr[$i] ^ $key[$i % count($key)]) ^ dechex($apikey[$i % count($apikey)]) );
+		}
+
+		var_dump(json_decode(base64_decode($ret),true));
+	}
+}
