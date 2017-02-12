@@ -24,7 +24,7 @@ function help()
 artisan (ver:'.VER.')
 =====================================		
 	uid [-a] [uid|zg]
-	mb  all|wg|sg|h004,h008 +5|-5	#modifyCommonHeroesBalance
+	mb  all|wg|sg|h004,h008 +5|-5 OR 1,1,1	#modifyCommonHeroesBalance
 		
 		')
 	
@@ -85,14 +85,14 @@ function modifyCommonHeroesBalance($a)
 		 	 .",agi plus:".$excel->getCell($index,40).",int plus:".$excel->getCell($index,39));
 		} 	
 	};
-	$w = function ($data,$plus) use ($excel,$mpq)
+	$w = function ($data,$closure) use ($excel,$mpq)
 	{
 		foreach ($data as $hero) 
 		{
 		 	 $index =  $excel->findRows($hero);
-		 	 $str = $excel->getCell($index,38) + $plus;
-		 	 $int = $excel->getCell($index,39) + $plus;
-		 	 $agi = $excel->getCell($index,40) + $plus;
+		 	 $str = $closure(0,$excel->getCell($index,38));
+		 	 $int = $closure(1,$excel->getCell($index,39));
+		 	 $agi = $closure(2,$excel->getCell($index,40));
 		 	 $excel->setCell($index,38,$str);
 		 	 $excel->setCell($index,39,$int);
 		 	 $excel->setCell($index,40,$agi);
@@ -127,10 +127,35 @@ function modifyCommonHeroesBalance($a)
 		if(preg_match("/^\+(\d+)$/",$a[1],$m))
 		{
 			$plus = $m[1];
+			//$a = 0 str,1 int 2 agi
+			$closure = function($a,$b) use($plus) {
+				return $b + $plus;
+			};
 		}
-		else if(preg_match("/^\-\d+$/",$a[1],$m)) 
+		else if(preg_match("/^\-(\d+)$/",$a[1],$m)) 
 		{
-			$plus = -1 * $m[1];
+			$plus = intval($m[1]);
+			//$a = 0 str,1 int 2 agi
+			$closure = function($a,$b) use($plus) {
+				return $b - $plus;
+			};
+		}
+		else if(preg_match("/^(\d+),(\d+),(\d+)$/",$a[1],$m)) 
+		{
+			$str = $m[1];
+			$int = $m[2];
+			$agi = $m[3];
+			$closure = function($a,$b) use($str,$int,$agi) {
+				switch($a)
+				{
+					case 0:
+						return $str;
+					case 1:
+						return $int;
+					default:
+						return $agi;
+				}
+			};
 		}
 		else
 		{
@@ -141,22 +166,22 @@ function modifyCommonHeroesBalance($a)
 		switch($a[0])
 		{
 			case "all":
-				$w(array_merge(getWeigouHeroesId(),getShugouHeroesId()),$plus);
+				$w(array_merge(getWeigouHeroesId(),getShugouHeroesId()),$closure);
 				$excel->save();
 				$write = true;
 				break;
 			case "wg":
-				$w(getWeigouHeroesId(),$plus);
+				$w(getWeigouHeroesId(),$closure);
 				$excel->save();
 				$write = true;
 				break;
 			case "sg":
-				$w(getShugouHeroesId(),$plus);
+				$w(getShugouHeroesId(),$closure);
 				$excel->save();
 				$write = true;
 				break;
 			default:
-				$w(explode(",",$a[0]),$plus);
+				$w(explode(",",$a[0]),$closure);
 				$excel->save();
 				$write = true;
 				break;

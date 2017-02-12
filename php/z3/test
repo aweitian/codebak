@@ -1,11 +1,5 @@
 <?php
-function aa()
-{
-	$bbc = 2;
-	function bb()
-	{
-		return 1 + $bbc;
-	}
-	return bb();
-}
-print aa();
+$handle = fopen("./test.txt", "r+");
+rewind($handle);
+fwrite($handle, "bb");
+fclose($handle);
