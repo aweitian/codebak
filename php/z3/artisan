@@ -11,35 +11,52 @@ if (PHP_SAPI != "cli") {
 	exit ( "RUN CLI MODE." );
 }
 $alias = array (
-	"mb" => "modifyCommonHeroesBalance" 
+	"mb" => "modifyCommonHeroesBalance", 
 );
 
 run ( $argv );
+function run($a) {
+	global $alias;
+	$l = count ( $a );
+	if ($l < 2) {
+		help ();
+	} else {
+		if (function_exists ( $a [1] )) {
+			call_user_func ( $a [1], array_slice ( $a, 2 ) );
+		} else if (isset ( $alias [$a [1]] ) && function_exists ( $alias [$a [1]] )) {
+			call_user_func ( $alias [$a [1]], array_slice ( $a, 2 ) );
+		} else {
+			help ();
+		}
+	}
+}
+
 function help() {
 	print (pgbk ( '
 artisan (ver:' . VER . ')
 =====================================		
 	uid [-a] [uid|zg]
-	mb  all|wg|sg|h004,h008 +5|-5 OR 1,1,1	#modifyCommonHeroesBalance
-		
+	mb all|wg|sg|h004,h008 +5|-5 OR 1,1,1	#modifyCommonHeroesBalance
+	skill all|wg|sg|h004,h008
+	skcool ANst,AOmi cl1,ct1,cl2,ct2 #数据不足使用后面的
 		' ))
 
 	 ;
 }
-function extractHumanUnitFuncTxt($r = true) {
-	if ($path = hitCache ( "Units\HumanUnitFunc.txt" )) {
-		// echo 'cache hint...' . "\n";
-		return $path;
+class ArgsHelper {
+//convert all|wg|sg|h004,h008 to [h004,h008]
+	public static function getHeroesArr($a) {
+		switch ($a) {
+			case "all" :
+				return ( array_merge ( getWeigouHeroesId (), getShugouHeroesId () ) );
+			case "wg" :
+				return ( getWeigouHeroesId () );
+			case "sg" :
+				return ( getShugouHeroesId () );
+			default :
+				return ( explode ( ",", $a ) );
+		}
 	}
-	exec ( "\"" . DIR . "\\bin\\mpq2k.exe\" e " . file_get_contents ( DIR . "/.map" ) . " Units\HumanUnitFunc.txt cache" );
-	exec ( 'cd cache && rename HumanUnitFunc.txt ' . md5 ( 'Units\HumanUnitFunc.txt' ) );
-	return $r && extractHumanUnitFuncTxt ( false );
-}
-function hitCache($str) {
-	$c = DIR . "/cache/" . md5 ( $str );
-	if (file_exists ( $c ))
-		return $c;
-	return "";
 }
 function uid($a) {
 	$l = count ( $a );
@@ -53,10 +70,129 @@ function uid($a) {
 		}
 	}
 }
+function skcool($a) {
+	//units\\unitabilities.slk  第3列 小SKILL,4 大SKILL
+	//units\\humanabilityfunc.txt
+	$mpq = new mpq ();
+	$excel = new slk ($mpq->get ( "units\\abilitydata.slk" ));
+	$excel->open ( );
+	$l = count ( $a );
+	if(isset($a[0]))
+	{
+		$data = explode(",",$a[0]);
+	}
+	else
+	{
+		help();
+		return;
+	}
+	$r = function ($data) use ($excel, $mpq) {
+		foreach ( $data as $skill ) {
+			$index = $excel->findRows ( $skill );
+			
+			//skill levels
+			$lv = $excel->getCell ( $index, 4 );
+			msg ( "--($lv)" . getSkillName ( $skill ));
+			for($i=0;$i<$lv;$i++) {
+				msg( "\t$i -- cool:".($excel->getCell ( $index, 12 + $i * 20  )) . ",cost:" . $excel->getCell ( $index, 13 + $i * 20 ));//cost	
+			}
+
+		}
+	};
+	$w = function ($data,$closure) use ($excel, $mpq) {
+		foreach ( $data as $skill ) {
+			$index = $excel->findRows ( $skill );
+			
+			//skill levels
+			$lv = $excel->getCell ( $index, 4 );
+			msg ( "--" . getSkillName ( $skill ));
+			for($i=0;$i<$lv;$i++) {
+				$excel->setCell ( $index, 12 + $i * 20  ,$closure($i+1,12,$excel->getCell ( $index, 12 + $i * 20  )));
+				$excel->setCell ( $index, 13 + $i * 20  ,$closure($i+1,13,$excel->getCell ( $index, 13 + $i * 20  )));
+				$closure($i+1,13,$excel->getCell ( $index, 13 + $i * 20  ));
+				msg( "\t$i -- cool:".($excel->getCell ( $index, 12 + $i * 20  )) . ",cost:" . $excel->getCell ( $index, 13 + $i * 20 ));//cost	
+			}
+
+		}
+		$excel->save();
+		$mpq->replace ( $mpq->get ( "units\\abilitydata.slk" ), "units\\abilitydata.slk" );
+	};
+	if(!isset($a[1]))
+	{
+		$r($data);
+	}
+	else 
+	{
+		$b = explode(",",$a[1]);
+		$c = [];
+		$d = [];
+		for($i=0;$i<count($b);$i++)
+		{
+			if($i % 2)
+			{
+				$d[] = $b[$i];	
+			}	
+			else
+			{
+				$c[] = $b[$i];	
+			}
+		}
+		$closure = function($index,$which,$value) use ($c,$d) {
+			$b = $which == 12 ? $c : $d;
+			$index = $index % count($b);
+			return $b[$index];
+		};	
+		$w($data,$closure);
+	}	
+	
+}
+function skill($a) {
+	//units\\unitabilities.slk  第3列 小SKILL,4 大SKILL
+	//units\\humanabilityfunc.txt
+	$mpq = new mpq ();
+	$excel = new slk ($mpq->get ( "units\\unitabilities.slk" ));
+	$excel->open ( );
+	$l = count ( $a );
+	if(isset($a[0]))
+	{
+		$data = ArgsHelper::getHeroesArr($a[0]);
+	}
+	else
+	{
+		$data = array_merge ( getWeigouHeroesId (), getShugouHeroesId () );	
+	}
+	$r = function ($data) use ($excel, $mpq) {
+		foreach ( $data as $hero ) {
+			$index = $excel->findRows ( $hero );
+			$secondary = $excel->getCell ( $index, 3 );
+			$main = $excel->getCell ( $index, 4 );
+			msg ( "--" . getHeroName ( $hero ));
+			foreach (explode(",", $secondary) as $skillId) {
+			 	 msg ( "\t secondary:" . $skillId . ":" . getSkillName ( $skillId ));
+			} 
+			foreach (explode(",", $main) as $skillId) {
+			 	 msg ( "\t main:" . $skillId . ":" . getSkillName ( $skillId ));
+			}
+			// . " str plus:" . $excel->getCell ( $index, 38 ) . ",agi plus:" . $excel->getCell ( $index, 40 ) . ",int plus:" . $excel->getCell ( $index, 39 ) );
+		}
+	};
+	$r($data);
+}
+function getSkillName($id) {
+	static $data = null;
+	$mpq = new mpq ();
+	if(is_null($data)){
+		$data = ini ( $mpq->get("Units\\humanabilityfunc.txt") );
+	}
+	if (array_key_exists ( $id, $data )) {
+		return $data [$id] ["Name"];
+	}
+	return "";
+}
 function modifyCommonHeroesBalance($a) {
 	$mpq = new mpq ();
-	$mpq->get ( "units\\unitbalance.slk" );
-	$excel = new slk ($mpq->getCachePath ( "units\\unitbalance.slk" ));
+	;
+	$excel = new slk ($mpq->get ( "units\\unitbalance.slk" ));
 	$excel->open ( );
 	$write = false;
 	$l = count ( $a );
@@ -81,20 +217,7 @@ function modifyCommonHeroesBalance($a) {
 	if ($l == 0) {
 		$m ( array_merge ( getWeigouHeroesId (), getShugouHeroesId () ) );
 	} else if ($l == 1) {
-		switch ($a [0]) {
-			case "all" :
-				$r ( array_merge ( getWeigouHeroesId (), getShugouHeroesId () ) );
-				break;
-			case "wg" :
-				$r ( getWeigouHeroesId () );
-				break;
-			case "sg" :
-				$r ( getShugouHeroesId () );
-				break;
-			default :
-				$r ( explode ( ",", $a [0] ) );
-				break;
-		}
+		$r(ArgsHelper::getHeroesArr($a [0]));
 	} else if ($l == 2) {
 		if (preg_match ( "/^\+(\d+)$/", $a [1], $m )) {
 			$plus = $m [1];
@@ -126,38 +249,20 @@ function modifyCommonHeroesBalance($a) {
 			help ();
 			return;
 		}
-		
-		switch ($a [0]) {
-			case "all" :
-				$w ( array_merge ( getWeigouHeroesId (), getShugouHeroesId () ), $closure );
-				$excel->save ();
-				$write = true;
-				break;
-			case "wg" :
-				$w ( getWeigouHeroesId (), $closure );
-				$excel->save ();
-				$write = true;
-				break;
-			case "sg" :
-				$w ( getShugouHeroesId (), $closure );
-				$excel->save ();
-				$write = true;
-				break;
-			default :
-				$w ( explode ( ",", $a [0] ), $closure );
-				$excel->save ();
-				$write = true;
-				break;
-		}
+		$w(ArgsHelper::getHeroesArr($a [0]), $closure );
+		$excel->save ();
+		$write = true;
 	} else {
 		help ();
 	}
 	if ($write) {
-		$mpq->replace ( $mpq->getCachePath ( "units\\unitbalance.slk" ), "units\\unitbalance.slk" );
+		$mpq->replace ( $mpq->get ( "units\\unitbalance.slk" ), "units\\unitbalance.slk" );
 	}
 }
 function getHeroName($id) {
-	$data = ini ( extractHumanUnitFuncTxt () );
+	$mpq = new mpq ();
+	
+	$data = ini ( $mpq->get("Units\\HumanUnitFunc.txt") );
 	if (array_key_exists ( $id, $data )) {
 		return $data [$id] ["Name"];
 	}
@@ -180,21 +285,6 @@ function getShugouHeroesId() {
 			'H004',
 			'E000' 
 	);
-}
-function run($a) {
-	global $alias;
-	$l = count ( $a );
-	if ($l < 2) {
-		help ();
-	} else {
-		if (function_exists ( $a [1] )) {
-			call_user_func ( $a [1], array_slice ( $a, 2 ) );
-		} else if (isset ( $alias [$a [1]] ) && function_exists ( $alias [$a [1]] )) {
-			call_user_func ( $alias [$a [1]], array_slice ( $a, 2 ) );
-		} else {
-			help ();
-		}
-	}
 }
 
 // $test = ini ( extractHumanUnitFuncTxt () );
@@ -267,13 +357,11 @@ class mpq {
 	}
 	public function get($path) {
 		try {
-			$this->getCachePath ( $path );
-			// msg ( "Cache: " . $path );
-			return;
-		} catch ( Exception $e ) {
-		}
+			return $this->getCachePath ( $path );
+		} catch ( Exception $e ) {}
 		system ( "\"" . DIR . "\\bin\\mpq2k.exe\" e " . $this->path . " " . $path . " cache" );
 		$this->cache ( $path );
+		return $this->getCachePath ( $path );
 	}
 	public function add($src, $dst) {
 		system ( "\"" . DIR . "\\bin\\mpq2k.exe\" a " . $this->path . " \"" . $src . "\" " . $dst . " /c" );
@@ -442,6 +530,7 @@ class slk {
 	 */
 	protected function getRaw($row, $col) {
 		if ($row > $this->rows || $col > $this->cols) {
+			var_dump($row,$col);
 			throw new Exception ( "invalid row or col" );
 		}
 		if (isset ( $this->data [$row] [$col] )) {
