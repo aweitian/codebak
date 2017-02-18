@@ -1,0 +1,5 @@
+artisan data fetch ver 3.0
+----------------------------------------
+feed data.txt
+fetch http://www.example.com
+filter rule
