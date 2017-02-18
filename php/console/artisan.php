@@ -1,4 +1,15 @@
-<?PHP
+<?php
+spl_autoload_register(function ($name) 
+{
+	if($name{0} == "I")
+		require __DIR__."/lib/interfaces/".$name.".php";	
+	else
+		require __DIR__."/lib/class/".$name.".php";	
+});
+
+$app = new app();
+$app->run($argv);
+
 class app
 {
 	public function run($argv)
@@ -16,7 +27,7 @@ class app
 	}
 	private function prompt()
 	{
-		$this->show('>>>');
+		$this->show('>>> ');
 	}
 	private function dispatch($cmd)
 	{
@@ -31,11 +42,16 @@ class app
 					$inst = $rc->newInstance();
 					$method = $rc->getMethod('run');
 					if(count($cmdArr) == 2)
-						$method->invokeArgs();
+						$method->invokeArgs($inst,$cmdArr[1]);
 					else
-						$method->invokeArgs($cmdArr[1]);
+						$method->invokeArgs($inst,['']);
+				}
+				else
+				{
+					$this->show('Cmd "' . $cls . '" not found' . "\n");
 				}
 			}
+
 		});
 		$this->prompt();
 	}
@@ -65,7 +81,13 @@ class app
 	}
 	public function help()
 	{
-		global $help;
+		$help = '
+artisan 数据采集第三版
+----------------------------------------
+feed data.txt
+fetch http://www.example.com
+filter rule
+';
 		$this->show($help);
 	}
 	private function welcome()
@@ -73,7 +95,7 @@ class app
 		$this->show('		
 artisan data fetch ver 3.0 (awei.tian @ 2017-2-17)
 ---------------------------------------------------
-	type help for more infoes
+type "help" for more infomation.
 ');
 	}
 	private function readCmd() 
