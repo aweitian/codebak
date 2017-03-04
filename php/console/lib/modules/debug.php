@@ -2,7 +2,7 @@
 /**
 * 
 */
-class debug implements IConsole {
+class debug implements console {
 	
 	public function __construct() {
 		

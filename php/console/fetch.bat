@@ -1,5 +1,5 @@
 @echo off
 #color 0d
 set PATH=./bin;%PATH%
-php artisan.php
+php lib/modules/fetch.php
 #color

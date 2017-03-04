@@ -1,0 +1,3 @@
+fetch usage:
+-------------------------
+fetch http://www.example/aa.html

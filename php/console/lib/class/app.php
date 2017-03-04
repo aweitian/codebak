@@ -11,13 +11,18 @@ class app extends console
 		$this->prompt();
 		while(($cmd = $this->readCmd()) !== false)
 		{
-			$this->dispatch($cmd);
+			try {
+				$this->dispatch($cmd);
+			} catch (Exception $e) {
+				$this->show($e->getMessage());
+			}
+			
 		}		
 	}
 	private function dispatch($cmd)
 	{
 		$cmds = explode("|",$cmd);
-		array_walk($cmds,function($v,$k){
+		array_walk($cmds,function($v,$k) use ($pipe){
 			$cmdArr = explode(' ',trim($v),2);	
 			if(class_exists($cls = trim($cmdArr[0])))
 			{
@@ -25,9 +30,10 @@ class app extends console
 				if ($rc->implementsInterface('IConsole')) 
 				{
 					$inst = $rc->newInstance($this);
+					$pipe->send();
 					$method = $rc->getMethod('run');
 					if(count($cmdArr) == 2)
-						$method->invokeArgs($inst,$cmdArr[1]);
+						$method->invokeArgs($inst,[array_slice ( $cmdArr, 1 )] );
 					else
 						$method->invokeArgs($inst,['']);
 				}
@@ -44,6 +50,10 @@ class app extends console
 	{
 		$help = file_get_contents($this->path."/.help");
 		$this->show($help);
+		foreach (glob($this->path."/lib/modules/*.php") as $filename) {
+			$this->show( 'Type "help ' . pathinfo($filename,PATHINFO_FILENAME) .'" for more infomation.' . "\n");
+		}
+
 	}
 	private function welcome()
 	{

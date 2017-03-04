@@ -1,0 +1,348 @@
+<?php
+//2017-3-4修改成CLI版本
+if(PHP_SAPI !== 'cli')exit('run cli mode');
+define('ROOT',str_replace('\\','/',dirname(__FILE__)).'/');
+$task = array();
+function p($msg)
+{
+	echo iconv('UTF-8','GBK',$msg);
+}
+function addtask(downloadJob $job)
+{
+	global $task;
+	if($job -> count)
+	{
+		$job -> count --;
+		$task[] = $job;	
+	
+	}else
+	{
+		p( $job -> info['currentWebPath'] . "文件下载失败." );
+	}
+}
+function gettask()
+{
+	global $task;
+	if(count($task))return array_pop($task);
+	die("任务队列操作完成");	
+}
+function downloadHTMLPHP(downloadJob $job)
+{
+	$info = $job -> info;
+	$task_url = $job -> info['currentWebPath'];
+	if(!file_exists($info['currentFilePath'].'/'.$info['currentFolder']))
+	{
+		p( "正在对".$task_url."进行第".$job->count."次下载\n");
+		$html = @file_get_contents($task_url);
+	}
+	else
+	{
+		p( "正在对".$task_url."进行用缓存处理\n");
+		$html = @file_get_contents($info['currentFilePath'].'/'.$info['currentFolder']);
+	}
+	if(strlen($html) === 0 || !$html)
+	{
+		p( $task_url."下载失败，重新添加的任务队列...\n");
+		addtask($job);	
+	
+	}
+	else
+	{
+		p( $task_url."下载成功,分析IMG,CSS.JS路径...\n");
+		CCache::update(
+			$info['currentFilePath'].'/',
+			$info['currentFolder'],
+			$html
+		);	
+		if(preg_match_all("/<(script|link|img)[^>]+?(?:src|href)=\"([^\"]+)\"[^>]*>/",$html,$matches))
+		{
+			foreach($matches[2] as $link)
+			{
+				addtask(getAbsPath(
+					$info['currentWebsite'],
+					$info['relativeFolder'],
+					$link
+				));
+			};
+		}				
+	}
+
+		
+}
+function downloadCss(downloadJob $job)
+{
+	$info = $job -> info;
+	$task_url = $job -> info['currentWebPath'];
+	
+	if(!file_exists($info['currentFilePath'].'/'.$info['currentFolder']))
+	{
+		p( "正在对".$task_url."进行第".$job->count."次下载\n");
+		$html = @file_get_contents($task_url);
+	}
+	else
+	{
+		p( "正在对".$task_url."进行用缓存处理\n");
+		$html = @file_get_contents($info['currentFilePath'].'/'.$info['currentFolder']);
+	}
+	
+	
+	if(strlen($html) === 0 || !$html)
+	{
+		p( $task_url."下载失败，重新添加的任务队列...\n");
+		addtask($job);	
+	}
+	else
+	{
+		p( $task_url."下载成功,分析背景图片路径...\n");
+		CCache::update(
+			$info['currentFilePath'].'/',
+			$info['currentFolder'],
+			$html
+		);	
+		$cssfilecontent = sweepCssComment($html);
+		if(preg_match_all("/url\(\"?([^)]+?)\"?\)/i",$cssfilecontent,$matches))
+		{
+			foreach($matches[1] as $match)
+			{
+				addtask(getAbsPath(
+					$info['currentWebsite'],
+					$info['relativeFolder'],
+					$match
+				));	
+//				echo $match;		
+			}
+		}
+				
+	}	
+}
+function downloadJSIMG(downloadJob $job)
+{
+	$info = $job -> info;
+	$task_url = $job -> info['currentWebPath'];
+	if(!file_exists($info['currentFilePath'].'/'.$info['currentFolder']))
+	{
+		p( "正在对".$task_url."进行第".$job->count."次下载\n");
+		$html = @file_get_contents($task_url);
+	}
+	else
+	{
+		p( "正在对".$task_url."进行用缓存处理\n");
+		$html = @file_get_contents($info['currentFilePath'].'/'.$info['currentFolder']);
+	}
+	if(strlen($html) === 0 || !$html)
+	{
+		p( $task_url."下载失败，重新添加的任务队列...\n");
+		addtask($job);	
+	}
+	else
+	{
+		p( $task_url."下载成功,存储完成...\n");
+		CCache::update(
+			$info['currentFilePath'].'/',
+			$info['currentFolder'],
+			$html
+		);	
+	}
+
+		
+}
+class downloadJob
+{
+	public $count = 3;
+	public $info;	
+	public function __construct($info)
+	{
+		$this -> info = $info;	
+	}
+}
+function sweepCssComment($csscontent)
+{
+	return preg_replace("/\/\*[^*]+\*\//","",$csscontent);	
+}
+function analyseUrl($url)
+{
+	$ori_url = $url;
+	if(substr($url,-1)==='/')
+	{
+		$url = $url."index.html";	
+	}
+	$url = preg_replace('/([^:])\/\//','$1/',$url);
+	$___turl = parse_url($url);
+	$currentWebsite = $___turl['scheme'].'://'.$___turl['host'].'/';
+	return array(
+		'currentFilePath' => dirname(ROOT.substr($___turl['path'],1)),
+		'currentFolder' => basename(ROOT.substr($___turl['path'],1)),
+		'relativeFolder' => (dirname(substr($___turl['path'],0))).'/',
+		'currentWebPath' => $ori_url,
+		'currentWebsite' => $currentWebsite,
+		'currentWebFolder' =>  pathinfo($url,PATHINFO_DIRNAME).'/'
+	);
+}
+function getAbsPath($currentWebsite,$currentDir,$relativePath)
+{
+	if(preg_match("/^https?:\/\//",$relativePath))return new downloadJob(analyseUrl($relativePath));
+	if(substr($relativePath,0,1) === '/')return  new downloadJob(analyseUrl($currentWebsite.$relativePath));
+	return new downloadJob(analyseUrl($currentWebsite.$currentDir.'/'.$relativePath));
+}
+function stripeJunkJS($html)
+{
+	return str_replace("</div></div></body></html>","</div></body></html>",$html);
+}
+
+class CCache
+{
+	private function __construct(){}
+	
+	static public function removeDir($dir)
+	{
+		$handle = @opendir($dir);
+		@readdir($handle);
+		@readdir($handle);
+		while (false !== ($file = @readdir($handle))) 
+		{
+			$file = $dir.DIRECTORY_SEPARATOR.$file;
+			if (is_dir($file))
+			{
+				self::removeDir($file);
+			} 
+			else 
+			{
+				@unlink($file);
+			}
+		}
+		@closedir($handle);
+		@rmdir($dir);
+		return true;
+	}
+	static public function mkdirs($path,$mode=0755)
+	{
+		if(!is_dir($path))
+		{
+			self::mkdirs(dirname($path),$mode);
+			mkdir($path,$mode);
+		}
+		return true;
+	}
+	static public function update($path,$filename,$content)
+	{
+		$path = iconv('UTF-8','GB2312',$path);
+		$filename = iconv('UTF-8','GB2312',$filename);
+		if(!is_dir($path)){
+			self::mkdirs($path);
+		}
+		return file_put_contents($path.$filename,$content);
+	}
+	static public function append($path,$filename,$content)
+	{
+		$path = iconv('UTF-8','GB2312',$path);
+		$filename = iconv('UTF-8','GB2312',$filename);
+		if(!is_dir($path))
+		{
+			self::mkdirs($path);
+		}
+		return file_put_contents($path.$filename,$content,FILE_APPEND);
+	}	
+	static public function read($absfilename)
+	{
+		$absfilename = iconv('UTF-8','GB2312',$absfilename);
+		return file_get_contents($absfilename);	
+	}
+	static public function rename($current,$dest)
+	{
+		$cur = iconv('UTF-8','GB2312',$current);
+		$dest = iconv('UTF-8','GB2312',$dest);
+		return rename($cur,$dest);
+	}
+	static public function romove($currentpath,$filename)
+	{
+		$cur = iconv('UTF-8','GB2312',$currentpath);
+		$old = iconv('UTF-8','GB2312',$filename);
+		if(is_dir($cur.$old.'/')){
+			self::removeDir($cur.$old.'/');
+		}
+		else
+		{
+			@unlink($cur.$old);	
+		}
+		return true;
+	}
+	static public function duplicate($source,$destination,$child = true)
+	{
+		if(!is_dir($source))
+		{
+			return 0;
+		}
+		if(!is_dir($destination))
+		{
+			mkdir($destination,0777);
+		}
+		$handle=dir($source);
+		while($entry=$handle->read())
+		{
+			if(($entry!=".")&&($entry!=".."))
+			{
+				if(is_dir($source."/".$entry))
+				{
+					if($child)
+						CCache::duplicate($source."/".$entry,$destination."/".$entry,$child);
+				}
+				else
+				{
+					copy($source."/".$entry,$destination."/".$entry);
+				}
+			}
+		}
+		return 1;
+	}
+}
+function help()
+{
+	p('
+php artisan
+php artisan www.baidu.com	
+');
+}
+if($argc == 1)
+{
+	help();
+}
+else if($argc ==2)
+{
+	$task_url = $argv[1];
+	if(!preg_match('/^http:\/\//',$task_url))
+	{
+		$task_url = 'http://' . $task_url;	
+	}	
+	if(!preg_match('/\/$/',$task_url))
+	{
+		$task_url = $task_url . '/';	
+	}
+	echo "start:\n---------------------------------\n";
+	addtask(new downloadJob(analyseUrl($task_url)));
+	
+	while(count($task))
+	{
+		$job = gettask();
+		$ext = strtolower(substr($job -> info['currentFolder'],-3));
+		switch($ext)
+		{
+			case 'css';
+				downloadCss($job);
+				break;
+			case 'php':
+			case 'tml':
+			case 'htm':
+				downloadHTMLPHP($job);
+				break;
+			case '.js':
+			case 'jpg':
+			case 'gif':
+			case 'png':
+				downloadJSIMG($job);
+				break;
+			default:
+				echo "未知文件类型".$job -> info['currentFolder'];
+		}
+		
+	}		
+}

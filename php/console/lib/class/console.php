@@ -7,6 +7,10 @@ abstract class console implements IConsole
 	protected $console_char_set = "GBK";
 	protected $fix_charset = false;
 	protected $app;
+	public function __construct($app)
+	{
+		$this->app = $app;
+	}
 	public function input() 
 	{
 		$ret = file_get_contents("php://stdin");
@@ -65,5 +69,13 @@ abstract class console implements IConsole
 	{
 		$this->show('>>> ');
 		return $this;
+	}
+	public function help()
+	{
+		if(file_exists($path = $this->app->path.'/lib/modules/'.get_class($this).".txt"))
+		{
+			return $this->show(file_get_contents($path));
+		}
+		return $this->show("no contents for this cmd.\n");
 	}
 }
