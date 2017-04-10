@@ -1,0 +1,39 @@
+	(function(){
+	var q = {
+		"baidu":"wd",
+		"sm":"q",
+		"sogou":"keyword",
+	};
+	function kw(s)
+	{
+		var u = document.referrer;
+		if(!u)return "";
+		var qs = u.split("?")[1] ? u.split("?")[1].split("&") : "";
+		var dm = u.split("?")[0] ? u.split("?")[0].split(".") : "";
+		if(!qs)return "";
+		if(!dm)return "";
+		var dl = dm.length;
+		if(dl < 2)return "";
+		var k = dm[dl -2];
+		dm = dm[dl -2] + "." + (dm[dl -1].split("/")[0] ? dm[dl -1].split("/")[0] : "");
+		switch(dm)
+		{
+			case "baidu.com":
+			case "sm.cn":
+			case "sogou.com":
+				break;
+			default:
+				return "";
+		}
+		for(var i=0;i<qs.length;i++)
+		{
+			var kv = qs[i].split("=");
+			if(kv[0] == q[k])
+			{
+				return GB2312UTF8.UTF8ToGB2312 (kv[1]); 
+			}
+		}
+		return "";
+	}	
+	window.getKw = kw;
+})();
