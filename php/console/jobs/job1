@@ -1,4 +1,7 @@
 <?php
 require_once(dirname(__DIR__)."/lib/autoload.php");
-$input = \lib\console::readStdin();
-\lib\console::writeStdout($input);
+// $input = \lib\console::readStdin();
+// \lib\console::writeStdout($input);
+echo "aaa\n";
+echo "bbb\n";
+echo "cccccccccccccccc";

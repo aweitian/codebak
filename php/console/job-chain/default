@@ -1,5 +1,8 @@
 //
-feed job1
+[] php jobs\job1
 
 //test comment
-run job2
+V php jobs\job2
+
+//jobs
+V php jobs\job3
