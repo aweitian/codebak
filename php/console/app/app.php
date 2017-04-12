@@ -75,11 +75,53 @@ curl scripts v1.0
 	{
 		//var_dump($this->cmdList);
 		if($cur >= count($this->cmdList))
+		{
+			\lib\console::writeStdout($stdin);
 			return;
+		}
 		$cmd = $this->cmdList[$cur];
 		$cmd = $this->makeCmd($cmd);
+		
+		if($cmd->requireCheck())
+		{
+			if(!is_string($cmd->check))
+			{
+				\lib\console::writeStderrLine("invalid cmd:" . $this->cmdList[$cur]);
+				return;
+			}
+			if(!\lib\utility::startsWith($cmd->check,"\\"))
+			{
+				$cls = "\\filter\\" . $cmd->check;
+			}
+			else
+			{
+				$cls = $cmd->check;
+			}
+			try
+			{
+				$rc = new \ReflectionClass($cls);
+			}
+			catch(\ReflectionException $e)
+			{
+				\lib\console::writeStderrLine("filter class: ($cls) not found.");
+				return;
+			}
+			
+			if (!$rc->implementsInterface("\\lib\\IFilter"))
+			{
+				\lib\console::writeStderrLine("invalid cmd:" . $this->cmdList[$cur]);
+				return;
+			}
+			$controller = $rc->newInstance();
+			$method = $rc->getMethod("check");
+			$ret = $method->invokeArgs($controller, array($stdin));
+			if($ret !== true)
+			{
+				\lib\console::writeStderrLine("block stdin:" . $stdin);
+				return;
+			}
+		}
 		$output = $this->execCmd($cmd,$stdin);
-		//var_dump($cmd);
 		if($cmd->isArrayReturn())
 		{
 			$cmd = explode("\n",$output);
@@ -109,20 +151,7 @@ curl scripts v1.0
 	}
 	private function makeCmd($line)
 	{
-		$arr = explode(" ", $line, 3);
-		if(count($arr) == 3)
-		{
-			$cmd = new \app\cmd($arr[1],$arr[0],explode(" ",$arr[2]));
-		}
-		else if(count($arr) == 2)
-		{
-			$cmd = new \app\cmd($arr[1],$arr[0]);
-		}
-		else
-		{
-			$cmd = new \app\cmd($arr[0]);
-		}
-		return $cmd;
+		return \app\cmd::make($line);
 	}
 	// private function runLine($cmd) 
 	// {
@@ -137,7 +166,9 @@ curl scripts v1.0
 			
 	// 	}
 	// }
-
+	/**
+	 * @return stdout | null
+	 */
 	public function execCmd(\app\cmd $cmd,$stdin)
 	{
 		$argv = join(" ",$cmd->argv);
@@ -146,7 +177,7 @@ curl scripts v1.0
 	}
 
 	/**
-	 * @return stdout
+	 * @return stdout | null
 	 */
 	public function exec($cmd,$stdin)
 	{
@@ -162,7 +193,7 @@ curl scripts v1.0
 
 
 		//debug
-		\lib\console::writeStderrLine("--> ".$cmd);
+		//\lib\console::writeStderrLine("--> ".$cmd);
 
 
 		$process = proc_open($cmd, $descriptorspec, $pipes);
@@ -188,14 +219,15 @@ curl scripts v1.0
 
 
 		    //debug
-			\lib\console::writeStderrLine(">>> ".$ret);
+			//\lib\console::writeStderrLine(">>> ".$ret);
 		    return $ret;
 		}
 		else
 		{
 			\lib\console::writeStderrLine("invalid cmd:" . $cmd);
+			return null;
 		}
-		return "";
+		
 	}
 
 	// private function setStdin($data)

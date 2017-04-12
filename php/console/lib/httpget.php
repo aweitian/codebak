@@ -1,28 +1,14 @@
 <?php
 namespace lib;
-class curl
+class httpget extends http
 {
-	private $cookie; //cookie保存路径
-	private $userAgent;
-	public function __construct()
-	{
-		$this->cookie=".";
-		if(!function_exists("curl_init"))
-		{
-			throw new Exception("LIB CURL DOES NOT SUPPORTED",0x1234);
-		}
-	}
-	public function setUserAgent($ua) 
-	{
-		$this->userAgent = $ua;
-	}
+	
 	/**
 	 * CURL-get方式获取数据
 	 * @param string $url URL
-	 * @param string $proxy 是否代理
 	 * @param int    $timeout 请求时间
 	 */
-	public function get($url, $timeout = 10) 
+	public function request($url, $timeout = 10) 
 	{
 		if (!$url) return false;
 		$ssl = substr($url, 0, 8) == 'https://' ? true : false;
@@ -44,7 +30,7 @@ class curl
 		curl_close($curl);
 		if ($curl_errno > 0) 
 		{
-			throw new Exception($curl_errno);
+			\lib\console::writeStderrLine("Error >>> httpget request code($curl_errno)");
 			return false;
 		}
 		return $content;
