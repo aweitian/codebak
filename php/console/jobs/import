@@ -1,5 +1,17 @@
 <?php
 require_once(dirname(__DIR__)."/lib/autoload.php");
-$input = explode("\n", \lib\console::readStdin());
-
-\lib\console::writeStdout($input);
+if($argc < 2)
+{
+	\lib\console::writeStdinErrLine("Usage: import filepath");
+}
+if (!file_exists($path = __DIR__."/../data/".$argv[1]) && !file_exists($path = $argv[1])) 
+{
+	\lib\console::writeStdinErrLine("file [ $path ] is nonexist.");
+}
+$input = file($path);
+foreach ($input as $value) 
+{
+	\lib\console::writeStdoutLine(trim($value));
+}
+//echo "a\n";
+//echo "b";

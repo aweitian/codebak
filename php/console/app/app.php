@@ -7,6 +7,8 @@ class app
 {
 	public $root;
 	private $cmdList = [];
+	private $debug = false;
+	private $options = [];
 	public function __construct($root) 
 	{
 		$this->root = $root;
@@ -19,22 +21,46 @@ class app
 		{
 			\lib\system::run("mkdir runtime");
 		}
+		$this->options['silient'] = true;
 		//\lib\system::run("cd runtime && echo > .stdin && echo > .stdout && echo > .stderr");
+	}
+	public function setDebugFlag()
+	{
+		$this->debug = true;
 	}
 	public function run($argv) 
 	{
 		$argc = count($argv);
-		if($argc == 1)
+		if($argc > 1)
 		{
-			print $this->exec('php jobs\\job2','lol');
-		}
-		else if($argc == 2)
-		{
-			$this->parseChain($argv[1]);
-		}
-		else
-		{
-			$this->help();
+			foreach ($argv as $arg) 
+			{
+				switch ($arg) 
+				{
+					case '--debug':
+					case '-d':
+						$this->setDebugFlag();
+						break;
+					case '--lineoutput':
+					case '-l':
+						$this->options['lineoutput'] = true;
+						break;
+					case '--silient':
+					case '-s':
+						$this->options['silient'] = false;
+						break;
+					case '--help':
+					case '-h':						
+						$this->help();
+					default:
+						
+						break;
+				}
+			}
+			if(!\lib\utility::startsWith($argv[1],'-'))
+			{
+				$this->parseChain($argv[1]);
+			}
 		}
 		//\lib\console::writeStdoutLine(count($argv));
 	}
@@ -42,10 +68,16 @@ class app
 	{
 		\lib\console::writeStdoutLine('
 curl scripts v1.0			
------------------------------------------------------			
-	php artisan
-	php artisan job-chain
+=======================================================			
+  php artisan
+  php artisan job-chain
 
+  options:
+  -----------------------------------------------------
+    -d/--debug set debug flag
+    -h/--help show those message
+    -l/--lineoutput show stdoutput with line seperator
+    -s/--silient show silient message
 		');
 
 	}
@@ -61,7 +93,6 @@ curl scripts v1.0
 		foreach ($cmds as $cmd) 
 		{
 			$cmd = trim($cmd);
-
 			if ($cmd == '' || \lib\utility::startsWith($cmd,'//')) 
 			{
 				continue;
@@ -76,12 +107,23 @@ curl scripts v1.0
 		//var_dump($this->cmdList);
 		if($cur >= count($this->cmdList))
 		{
-			\lib\console::writeStdout($stdin);
+			if(array_key_exists('lineoutput', $this->options) && $this->options['lineoutput'] == true)
+			{
+				\lib\console::writeStdoutLine($stdin);
+			}
+			else
+			{
+				\lib\console::writeStdout($stdin);
+			}
 			return;
 		}
 		$cmd = $this->cmdList[$cur];
 		$cmd = $this->makeCmd($cmd);
-		
+		//默认第一条命令不检查STDIN
+		if ($cur == 0 && $cmd->defChk )
+		{
+			$cmd->setCheck(false);
+		}
 		if($cmd->requireCheck())
 		{
 			if(!is_string($cmd->check))
@@ -117,7 +159,10 @@ curl scripts v1.0
 			$ret = $method->invokeArgs($controller, array($stdin));
 			if($ret !== true)
 			{
-				\lib\console::writeStderrLine("block stdin:" . $stdin);
+				if($this->options['silient'] === false)
+				{
+					\lib\console::writeStderrLine("block stdin:$stdin,cmd:".$cmd->getCmd());
+				}
 				return;
 			}
 		}
@@ -135,11 +180,7 @@ curl scripts v1.0
 			$this->execCmdList($output,$cur+1);
 		}
 	}
-	// private function runSingleTask($stdin,$cmd,$cur)
-	// {
-	// 	echo "stdin:$stdin,now:$data\n";
-	// 	run($data,$cur);	
-	// }
+
 	private function parseLine($cmd)
 	{
 		$cmd = trim($cmd);
@@ -153,19 +194,6 @@ curl scripts v1.0
 	{
 		return \app\cmd::make($line);
 	}
-	// private function runLine($cmd) 
-	// {
-	// 	// if (file_exists($this->root.'/jobs/'.$cmd)) 
-	// 	// {
-			
-	// 	// }	
-	// 	$cmd = $this->makeCmd($cmd);
-	// 	$output = $this->execCmd($cmd);
-	// 	if($cmd->isArrayReturn())
-	// 	{
-			
-	// 	}
-	// }
 	/**
 	 * @return stdout | null
 	 */
@@ -193,6 +221,11 @@ curl scripts v1.0
 
 
 		//debug
+		if($this->debug)
+	    {
+	    	\lib\console::writeStderrLine("<<< ".$stdin);
+	    	\lib\console::writeStderrLine("--> ".$cmd);
+	    }
 		//\lib\console::writeStderrLine("--> ".$cmd);
 
 
@@ -219,7 +252,12 @@ curl scripts v1.0
 
 
 		    //debug
-			//\lib\console::writeStderrLine(">>> ".$ret);
+		    if($this->debug)
+		    {
+		    	\lib\console::writeStderrLine(">>> ".$ret);
+		    	\lib\console::writeStderrLine("---------------------");
+		    }
+			//
 		    return $ret;
 		}
 		else

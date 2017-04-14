@@ -3,10 +3,14 @@
 
 
 //
-[] php jobs\job1
+//[] php jobs\job1
+
+import testdata.txt
+
 
 //test comment
-V php jobs\job2
+- php jobs\job2
 
 //jobs
->|test V php jobs\job3
+>|test - php jobs\job3
+>|test - php jobs\job4
