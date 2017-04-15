@@ -1,6 +1,6 @@
 <?php
 namespace lib;
-class httpget extends http
+class httpget extends \lib\http
 {
 	
 	/**

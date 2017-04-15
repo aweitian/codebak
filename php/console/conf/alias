@@ -1,1 +1,3 @@
 []:import php jobs\\import
+get php jobs\\httpget_stdin
+post php jobs\\httppost_stdin

@@ -1,0 +1,5 @@
+<?php
+require_once(dirname(__DIR__)."/lib/autoload.php");
+$input = $argv[1];
+$http = new \lib\httpget();
+\lib\console::writeStdout($http->request(trim($input)));

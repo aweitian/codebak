@@ -1,0 +1,9 @@
+<?php
+//第一行是URL，其它是data
+require_once(dirname(__DIR__)."/lib/autoload.php");
+$input = \lib\console::readStdin();
+$tmp = explode("\n", trim($input),2);
+$url = trim($tmp[0]);
+$data = trim($tmp[1]);
+$http = new \lib\httppost();
+\lib\console::writeStdout($http->request($url,$data));
