@@ -1,0 +1,5 @@
+<?php
+require_once(dirname(__DIR__)."/lib/autoload.php");
+$env = json_decode(file_get_contents(__DIR__.'/../runtime/.env'),true);
+$jobchain = $env['jobchain'];
+include __DIR__.'/../job-chain/'.$jobchain.'/'.$argv[1];

@@ -1,0 +1,7 @@
+//grub info post to weixin.nanpufuke.com
+
+import weixin.nanpufuke.com.txt
+exec url_filter
+echoo
+utf82gbk
+//echo

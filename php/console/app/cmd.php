@@ -52,6 +52,7 @@ class cmd
 	{
 		foreach (file(__DIR__.'/../conf/alias') as $line) 
 		{
+			$line = trim($line);
 			$tmp = explode(" ",$line,2);
 			if(count($tmp) == 2)
 			{

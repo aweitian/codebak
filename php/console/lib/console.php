@@ -2,9 +2,15 @@
 namespace lib;
 class console
 {
+	//判断当前控制台是不是WINDOWS DOS
+	static public function isWinDosConsole()
+	{
+		// DOS下没有这个变量
+		return !isset($_SERVER['_']);
+	}
 	static public function readStdin()
 	{
-			return file_get_contents('php://stdin');
+		return file_get_contents('php://stdin');
 	}
 	static public function writeStdout($data)
 	{

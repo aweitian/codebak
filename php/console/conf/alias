@@ -1,3 +1,7 @@
 []:import php jobs\\import
 get php jobs\\httpget_stdin
 post php jobs\\httppost_stdin
+exec php jobs\\exec
+gbk2utf8 php jobs\\gbk2utf8
+utf82gbk php jobs\\utf82gbk
+echoo php jobs\\echoo

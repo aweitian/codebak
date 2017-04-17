@@ -1,6 +1,6 @@
 <?php
 require_once(__DIR__."/lib/autoload.php");
 
-
+\lib\wrap::install();
 $app = new \app\app(__DIR__);
 $app->run($argv);

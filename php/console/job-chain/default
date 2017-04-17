@@ -5,12 +5,15 @@
 //
 //[] php jobs\job1
 
-import testdata.txt
+//import testdata.txt
 
 
 //test comment
-- php jobs\job2
+//- php jobs\job2
 
 //jobs
->|test - php jobs\job3
->|test - php jobs\job4
+//>|test - php jobs\job3
+//>|test - php jobs\job4
+
+
+php jobs\test

@@ -9,6 +9,7 @@ class app
 	private $cmdList = [];
 	private $debug = false;
 	private $options = [];
+	private $jobchain;
 	public function __construct($root) 
 	{
 		$this->root = $root;
@@ -59,10 +60,19 @@ class app
 			}
 			if(!\lib\utility::startsWith($argv[1],'-'))
 			{
+				$this->jobchain = $argv[1];
+				$this->initEnv();
 				$this->parseChain($argv[1]);
 			}
 		}
 		//\lib\console::writeStdoutLine(count($argv));
+	}
+	private function initEnv()
+	{
+		$env = [
+			'jobchain' => $this->jobchain
+		];
+		file_put_contents($this->root.'/runtime/.env', json_encode($env));
 	}
 	public function help()
 	{
@@ -87,6 +97,10 @@ curl scripts v1.0
 		{
 			\lib\console::writeStderrLine("job-chain $name is nonexists");
 			exit;
+		}
+		if (is_dir($path)) 
+		{
+			$path = $path . '/index';
 		}
 		$this->cmdList = [];
 		$cmds = file($path);
@@ -180,7 +194,14 @@ curl scripts v1.0
 			$this->execCmdList($output,$cur+1);
 		}
 	}
-
+	//https://bugs.php.net/bug.php?id=50503
+	private function makeEnv()
+	{
+		//windows环境下环境变量有问题
+		return $_SERVER + [
+			"JOB_CHAIN" => $this->jobchain,
+		];
+	}
 	private function parseLine($cmd)
 	{
 		$cmd = trim($cmd);
@@ -228,7 +249,7 @@ curl scripts v1.0
 	    }
 		//\lib\console::writeStderrLine("--> ".$cmd);
 
-
+	    //var_dump($_ENV + $this->makeEnv($this->jobchain));exit;
 		$process = proc_open($cmd, $descriptorspec, $pipes);
 		if (is_resource($process)) 
 		{

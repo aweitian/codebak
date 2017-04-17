@@ -1,0 +1,115 @@
+array(55) {
+  ["#envTSLOGsss3416"]=>
+  string(7) "4389520"
+  ["ALLUSERSPROFILE"]=>
+  string(14) "C:\ProgramData"
+  ["ANDROID_HOME"]=>
+  string(38) "D:\adt-bundle-windows-x86-20140702\sdk"
+  ["ANT_HOME"]=>
+  string(20) "D:\apache-ant-1.10.1"
+  ["APPDATA"]=>
+  string(38) "C:\Users\Administrator\AppData\Roaming"
+  ["CommonProgramFiles"]=>
+  string(35) "C:\Program Files (x86)\Common Files"
+  ["CommonProgramFiles(x86)"]=>
+  string(35) "C:\Program Files (x86)\Common Files"
+  ["CommonProgramW6432"]=>
+  string(29) "C:\Program Files\Common Files"
+  ["COMPUTERNAME"]=>
+  string(15) "USER-20161203EY"
+  ["ComSpec"]=>
+  string(27) "C:\Windows\system32\cmd.exe"
+  ["FP_NO_HOST_CHECK"]=>
+  string(2) "NO"
+  ["HOMEDRIVE"]=>
+  string(2) "C:"
+  ["HOMEPATH"]=>
+  string(20) "\Users\Administrator"
+  ["LOCALAPPDATA"]=>
+  string(36) "C:\Users\Administrator\AppData\Local"
+  ["LOGONSERVER"]=>
+  string(17) "\\USER-20161203EY"
+  ["LUA_DEV"]=>
+  string(30) "C:\Program Files (x86)\Lua\5.1"
+  ["LUA_PATH"]=>
+  string(43) ";;C:\Program Files (x86)\Lua\5.1\lua\?.luac"
+  ["NUMBER_OF_PROCESSORS"]=>
+  string(1) "4"
+  ["OS"]=>
+  string(10) "Windows_NT"
+  ["Path"]=>
+  string(721) "C:\Tcl\bin;C:\Program Files (x86)\Java\jdk1.8.0_111\bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;D:\adt-bundle-windows-x86-20140702\sdk\platform-tools;C:\Program Files\nodejs\;C:\Program Files (x86)\Bitvise SSH Client;D:\HashiCorp\Vagrant\bin;C:\ProgramData\ComposerSetup\bin;C:\Program Files (x86)\Lua\5.1;C:\Program Files (x86)\Lua\5.1\clibs;D:\apache-ant-1.10.1\bin;C:\Windows\Microsoft.NET\Framework64\v4.0.30319;C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\Bin\NETFX 4.0 Tools\x64;E:\python3.6\Scripts\;E:\python3.6\;c:\xampp\php;c:\cmds;c:\ext-exe;C:\Users\Administrator\AppData\Roaming\npm;C:\Users\Administrator\AppData\Roaming\Composer\vendor\bin"
+  ["PATHEXT"]=>
+  string(70) ".COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC;.tcl;.wlua;.lexe"
+  ["PROCESSOR_ARCHITECTURE"]=>
+  string(3) "x86"
+  ["PROCESSOR_ARCHITEW6432"]=>
+  string(5) "AMD64"
+  ["PROCESSOR_IDENTIFIER"]=>
+  string(50) "Intel64 Family 6 Model 58 Stepping 9, GenuineIntel"
+  ["PROCESSOR_LEVEL"]=>
+  string(1) "6"
+  ["PROCESSOR_REVISION"]=>
+  string(4) "3a09"
+  ["ProgramData"]=>
+  string(14) "C:\ProgramData"
+  ["ProgramFiles"]=>
+  string(22) "C:\Program Files (x86)"
+  ["ProgramFiles(x86)"]=>
+  string(22) "C:\Program Files (x86)"
+  ["ProgramW6432"]=>
+  string(16) "C:\Program Files"
+  ["PROMPT"]=>
+  string(4) "$P$G"
+  ["PSModulePath"]=>
+  string(51) "C:\Windows\system32\WindowsPowerShell\v1.0\Modules\"
+  ["PUBLIC"]=>
+  string(15) "C:\Users\Public"
+  ["SESSIONNAME"]=>
+  string(7) "Console"
+  ["SystemDrive"]=>
+  string(2) "C:"
+  ["SystemRoot"]=>
+  string(10) "C:\Windows"
+  ["TEMP"]=>
+  string(36) "C:\Users\ADMINI~1\AppData\Local\Temp"
+  ["TMP"]=>
+  string(36) "C:\Users\ADMINI~1\AppData\Local\Temp"
+  ["USERDOMAIN"]=>
+  string(15) "USER-20161203EY"
+  ["USERNAME"]=>
+  string(13) "Administrator"
+  ["USERPROFILE"]=>
+  string(22) "C:\Users\Administrator"
+  ["VBOX_MSI_INSTALL_PATH"]=>
+  string(35) "C:\Program Files\Oracle\VirtualBox\"
+  ["VS100COMNTOOLS"]=>
+  string(66) "C:\Program Files (x86)\Microsoft Visual Studio 10.0\Common7\Tools\"
+  ["windir"]=>
+  string(10) "C:\Windows"
+  ["windows_tracing_flags"]=>
+  string(1) "3"
+  ["windows_tracing_logfile"]=>
+  string(45) "C:\BVTBin\Tests\installpackage\csilogfile.log"
+  ["PHP_SELF"]=>
+  string(8) "test.php"
+  ["SCRIPT_NAME"]=>
+  string(8) "test.php"
+  ["SCRIPT_FILENAME"]=>
+  string(8) "test.php"
+  ["PATH_TRANSLATED"]=>
+  string(8) "test.php"
+  ["DOCUMENT_ROOT"]=>
+  string(0) ""
+  ["REQUEST_TIME_FLOAT"]=>
+  float(1492398778.246)
+  ["REQUEST_TIME"]=>
+  int(1492398778)
+  ["argv"]=>
+  array(1) {
+    [0]=>
+    string(8) "test.php"
+  }
+  ["argc"]=>
+  int(1)
+}

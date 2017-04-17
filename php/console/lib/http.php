@@ -2,8 +2,8 @@
 namespace lib;
 abstract class http
 {
-	private $cookie; //cookie保存路径
-	private $userAgent = 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1';
+	protected $cookie; //cookie保存路径
+	protected $userAgent = 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1';
 	public function __construct($cookie_path='',$useragent='')
 	{
 		if ($cookie_path != '') 
