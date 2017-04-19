@@ -1,0 +1,18 @@
+<?php
+require_once(dirname(dirname(__DIR__))."/lib/autoload.php");
+$input = \lib\console::readStdin();
+$url = 'http://weixin.nanpufuke.com/api/grub.php';
+$data = 'doc_name=:doctor&q=wxsayhi&dis_name=%E5%85%A8%E9%83%A8%E7%97%85%E7%A7%8D&score=:score&name=:name&message=:msg';
+$obj = @json_decode($input,true);
+if(is_array($obj))
+{
+	//\lib\console::writeStdout($obj['doctor'] . ' - ' . $obj['name']);
+	$data = strtr($data,$obj);
+	\lib\console::writeStdout($url . "\n" . $data);
+	\lib\console::writeStderrLine(
+		\lib\charset::utf82gbk(urldecode($obj[':doctor'])) 
+		. ' : ' 
+		. \lib\charset::utf82gbk(urldecode($obj[':name']))
+		. ' -- '
+	);
+}

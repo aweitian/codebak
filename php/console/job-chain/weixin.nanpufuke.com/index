@@ -2,6 +2,10 @@
 
 import weixin.nanpufuke.com.txt
 exec url_filter
-echoo
-utf82gbk
-//echo
+exec doctor_id
+[] exec make_url --page=10
+>|urlchk get
+[] exec make_obj
+exec make_submit_data
+post --nocache
+//utf82gbk

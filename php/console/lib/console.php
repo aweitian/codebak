@@ -28,4 +28,28 @@ class console
 	{
 		return file_put_contents('php://stderr', $data . "\n");
 	}
+	static public function getArgv($what,$default)
+	{
+		$data = $_SERVER['argv'];
+		foreach($data as $row)
+		{
+			if(\lib\utility::startsWith($row,'--'.$what.'='))
+			{
+				return substr($row, strlen($what)+3);
+			}
+		}
+		return $default;
+	}
+	static public function hasArgv($what)
+	{
+		$data = $_SERVER['argv'];
+		foreach($data as $row)
+		{
+			if(\lib\utility::startsWith($row,'--'.$what))
+			{
+				return true;
+			}
+		}
+		return false;
+	}
 }

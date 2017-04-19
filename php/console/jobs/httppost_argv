@@ -2,7 +2,15 @@
 //第一行是URL，其它是data
 require_once(dirname(__DIR__)."/lib/autoload.php");
 $input = \lib\console::readStdin();
-$url = $argv[1];
-$data = trim($input);
-$http = new \lib\httppost();
-\lib\console::writeStdout($http->request($url,$data));
+$cf = \lib\console::hasArgv("nocache");
+$url = \lib\console::getArgv("url","");
+if($input && $url)
+{
+	$data = trim($input);
+	$http = new \lib\httppost();
+	if($cf)
+	{
+		$http->setCacheFlag(false);
+	}
+	\lib\console::writeStdout($http->request($url,$data));
+}

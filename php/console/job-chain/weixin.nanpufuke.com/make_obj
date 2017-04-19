@@ -1,0 +1,271 @@
+<?php
+require_once(dirname(dirname(__DIR__))."/lib/autoload.php");
+$input = \lib\console::readStdin();
+$obj = @json_decode($input,true);
+//doc_name=%E5%BA%84%E4%BE%9D%E4%BA%AE
+//dis_name=%E5%85%A8%E9%83%A8%E7%97%85%E7%A7%8D
+//score=1
+//name=test
+//message=eee
+if(is_array($obj))
+{
+	$data = $obj['map']['localPageModel']['list'];
+	foreach ($data as $row) 
+	{
+		\lib\console::writeStdoutLine(
+			json_encode([
+				':doctor' => urlencode($row['expertName']) ,
+				':name'   => urlencode($row['nickName']),
+				':msg'    => urlencode($row['content']),
+				':score'  => rand(1,10) < 3 ? 4 : 5
+			])
+		);
+	}
+}
+
+
+// {
+//     "hasError": false,
+//     "code": "1",
+//     "map": {
+//         "searchCommentDO": {
+//             "excludeArea": null,
+//             "q": "",
+//             "provinceId": "all",
+//             "province": "全国",
+//             "cityId": "all",
+//             "city": "不限",
+//             "open": "all",
+//             "hospitalLevel": "all",
+//             "hospitalType": "all",
+//             "hospitalKind": "all",
+//             "pageNo": "2",
+//             "pageSize": "10",
+//             "moreFilter": false,
+//             "spellCheckQ": null,
+//             "exactId": null,
+//             "exactName": null,
+//             "sort": "doctor",
+//             "fl": null,
+//             "searchUrl": null,
+//             "dynamicFilter": null,
+//             "doSpellCheck": null,
+//             "fg": "0",
+//             "travel": null,
+//             "guide": null,
+//             "excludeHospitalType": null,
+//             "excludeHospital": null,
+//             "guahaotong": null,
+//             "openSource": "9",
+//             "longitude": null,
+//             "latitude": null,
+//             "distance": null,
+//             "duplicate": null,
+//             "hospitalFilter": null,
+//             "departmentFilter": null,
+//             "start": 0,
+//             "rows": 10,
+//             "waitTime": null,
+//             "haoyuan": null,
+//             "hospDeptIds": null,
+//             "hospitalIds": "",
+//             "expertIds": "c6305b8d-feaa-4ae2-a470-00296830fa68000",
+//             "groupCount": 0,
+//             "searchCount": null,
+//             "commentTypes": "0,5,6,7,11",
+//             "treatmentEffect": null,
+//             "diseaseId": null,
+//             "doctorAttitude": null,
+//             "commentTag": null,
+//             "groupIds": null,
+//             "aggrField": "parsed_star_tag,extracted_disease,hospital",
+//             "searchCommentDiseaseDOs": [
+//                 {
+//                     "diseaseId": "43480",
+//                     "diseaseName": "卵巢肿瘤",
+//                     "count": "10"
+//                 },
+//                 {
+//                     "diseaseId": "E9F2E16619D731D7E0400A0AC864423C",
+//                     "diseaseName": "巧克力囊肿",
+//                     "count": "9"
+//                 },
+//                 {
+//                     "diseaseId": "44327",
+//                     "diseaseName": "内分泌失调",
+//                     "count": "2"
+//                 },
+//                 {
+//                     "diseaseId": "38174",
+//                     "diseaseName": "外阴瘙痒",
+//                     "count": "1"
+//                 },
+//                 {
+//                     "diseaseId": "38365",
+//                     "diseaseName": "女性不育",
+//                     "count": "1"
+//                 },
+//                 {
+//                     "diseaseId": "43107",
+//                     "diseaseName": "多囊卵巢综合症",
+//                     "count": "1"
+//                 },
+//                 {
+//                     "diseaseId": "44277",
+//                     "diseaseName": "子宫颈息肉",
+//                     "count": "1"
+//                 },
+//                 {
+//                     "diseaseId": "44317",
+//                     "diseaseName": "卵巢囊肿",
+//                     "count": "1"
+//                 },
+//                 {
+//                     "diseaseId": "60a26066-31e4-11e6-804e-848f69fd6b70",
+//                     "diseaseName": "肌瘤",
+//                     "count": "1"
+//                 },
+//                 {
+//                     "diseaseId": "FE1FF08FB960B5F9E0400A0AC8647FE5",
+//                     "diseaseName": "妇科炎症",
+//                     "count": "1"
+//                 }
+//             ],
+//             "searchCommentHospitalTags": [
+//                 {
+//                     "hospitalId": "35b6cf2c-d9df-4e9d-b5c4-20e85d3cf983000",
+//                     "hospitalName": "上海南浦妇科医院",
+//                     "count": "31"
+//                 }
+//             ],
+//             "searchCommentTypeDOs": null,
+//             "deptAggr": null,
+//             "searchCommentDeptDOs": null,
+//             "searchCommentStarTagDOs": null,
+//             "stdDeptId": null
+//         },
+//         "commentExpertNameIsShow": false,
+//         "localPageModel": {
+//             "list": [
+//                 {
+//                     "id": 5393939,
+//                     "encodeId": "E5E1B565D538EFEF",
+//                     "expertId": "c6305b8d-feaa-4ae2-a470-00296830fa68000",
+//                     "expertName": "路青",
+//                     "hospdeptId": "3a37e51a-f609-41fb-af91-d9206499001c000",
+//                     "hospitalId": "35b6cf2c-d9df-4e9d-b5c4-20e85d3cf983000",
+//                     "commentType": 0,
+//                     "hasAppend": 0,
+//                     "userId": 0,
+//                     "nickName": "花**",
+//                     "userImg": null,
+//                     "userSex": null,
+//                     "orderId": "",
+//                     "doctorAttitude": 5,
+//                     "treatmentEffect": 5,
+//                     "treatmentEffects": null,
+//                     "guideService": 5,
+//                     "waitingTime": 5,
+//                     "diseaseName": "卵巢肿瘤",
+//                     "matchDisease": null,
+//                     "gmtClinic": null,
+//                     "clinicTime": "",
+//                     "clinicReason": "",
+//                     "content": "路医生真是很敬业，每次都人很多，但路医生总是热情接待，耐心解答，不厌其烦，难得一见的好医生！",
+//                     "treatmentAfterday": 5,
+//                     "serviceableTimes": 0,
+//                     "state": 0,
+//                     "source": "挂号网",
+//                     "reviewTime": null,
+//                     "reviewStaff": null,
+//                     "gmtCreated": 1471832823000,
+//                     "gmtModified": 1472106760000,
+//                     "expertIds": null,
+//                     "commentSize": 0,
+//                     "commentEntrance": 0,
+//                     "commentExpertAppendDO": null,
+//                     "replyContent": null,
+//                     "replySource": null,
+//                     "replyGmtModified": null,
+//                     "hospitalName": null,
+//                     "hospdeptName": null,
+//                     "appendCommentSourceType": "",
+//                     "appendState": "",
+//                     "appendContent": "",
+//                     "appendCreateTime": null,
+//                     "appendTreatmentAfterDay": "",
+//                     "gmtCreatedStr": "2016-08-22",
+//                     "doctorState": "0",
+//                     "defaultPraise": null,
+//                     "consultKey": null
+//                 },
+//                 {
+//                     "id": 5536913,
+//                     "encodeId": "1E86E5B0E67DAE48",
+//                     "expertId": "c6305b8d-feaa-4ae2-a470-00296830fa68000",
+//                     "expertName": "路青",
+//                     "hospdeptId": "3a37e51a-f609-41fb-af91-d9206499001c000",
+//                     "hospitalId": "35b6cf2c-d9df-4e9d-b5c4-20e85d3cf983000",
+//                     "commentType": 0,
+//                     "hasAppend": 0,
+//                     "userId": 0,
+//                     "nickName": "廉**",
+//                     "userImg": null,
+//                     "userSex": null,
+//                     "orderId": "",
+//                     "doctorAttitude": 5,
+//                     "treatmentEffect": 5,
+//                     "treatmentEffects": null,
+//                     "guideService": 5,
+//                     "waitingTime": 5,
+//                     "diseaseName": "子宫小肌瘤",
+//                     "matchDisease": null,
+//                     "gmtClinic": null,
+//                     "clinicTime": "",
+//                     "clinicReason": "",
+//                     "content": "医生态度非常好、很有耐心、赞",
+//                     "treatmentAfterday": 5,
+//                     "serviceableTimes": 0,
+//                     "state": 0,
+//                     "source": "挂号网",
+//                     "reviewTime": null,
+//                     "reviewStaff": null,
+//                     "gmtCreated": 1473039185000,
+//                     "gmtModified": 1473493134000,
+//                     "expertIds": null,
+//                     "commentSize": 0,
+//                     "commentEntrance": 0,
+//                     "commentExpertAppendDO": null,
+//                     "replyContent": null,
+//                     "replySource": null,
+//                     "replyGmtModified": null,
+//                     "hospitalName": null,
+//                     "hospdeptName": null,
+//                     "appendCommentSourceType": "",
+//                     "appendState": "",
+//                     "appendContent": "",
+//                     "appendCreateTime": null,
+//                     "appendTreatmentAfterDay": "",
+//                     "gmtCreatedStr": "2016-09-05",
+//                     "doctorState": "0",
+//                     "defaultPraise": null,
+//                     "consultKey": null
+//                 }
+//             ],
+//             "pageSize": 10,
+//             "pageNo": 2,
+//             "pageCount": 4,
+//             "totalCount": 31,
+//             "skipCount": 10,
+//             "searchExactId": null,
+//             "searchExactName": null,
+//             "standDepartment": null,
+//             "negativeRatio": 0,
+//             "articleFacet": null,
+//             "startRow": 10,
+//             "endRow": 19
+//         }
+//     },
+//     "returnUrl": null,
+//     "message": "查询成功！"
+// }

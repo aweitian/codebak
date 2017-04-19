@@ -3,7 +3,8 @@ namespace lib;
 abstract class http
 {
 	protected $cookie; //cookie保存路径
-	protected $userAgent = 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1';
+	public $userAgent = 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1';
+	public $useCache = true;
 	public function __construct($cookie_path='',$useragent='')
 	{
 		if ($cookie_path != '') 
@@ -25,6 +26,18 @@ abstract class http
 				$this->setUserAgent(file_get_contents($path));
 			}
 		}
+	}
+	public function setCacheFlag($v)
+	{
+		$this->useCache = !!$v;
+	}
+	public function getCachePath($url)
+	{
+		return __DIR__.'/../runtime/fetch_cache/'.md5($url);
+	}
+	public function cache($url,$content)
+	{
+		file_put_contents($this->getCachePath($url), $content);
 	}
 	public function setUserAgent($ua) 
 	{

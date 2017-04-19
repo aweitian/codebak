@@ -11,6 +11,10 @@ class httpget extends \lib\http
 	public function request($url, $timeout = 10) 
 	{
 		if (!$url) return false;
+		if($this->useCache && file_exists($path = $this->getCachePath($url)))
+		{
+			return file_get_contents($path);
+		}
 		$ssl = substr($url, 0, 8) == 'https://' ? true : false;
 		$curl = curl_init();
 		curl_setopt($curl, CURLOPT_URL, $url);
@@ -32,6 +36,10 @@ class httpget extends \lib\http
 		{
 			\lib\console::writeStderrLine("Error >>> httpget request code($curl_errno)");
 			return false;
+		}
+		if($this->useCache)
+		{
+			$this->cache($url,$content);
 		}
 		return $content;
 	}

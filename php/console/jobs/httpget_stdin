@@ -1,5 +1,11 @@
 <?php
 require_once(dirname(__DIR__)."/lib/autoload.php");
 $input = \lib\console::readStdin();
+$cf = \lib\console::hasArgv("nocache");
+
 $http = new \lib\httpget();
+if($cf)
+{
+	$http->setCacheFlag(false);
+}
 \lib\console::writeStdout($http->request(trim($input)));

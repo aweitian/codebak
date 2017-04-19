@@ -13,7 +13,7 @@ class app
 	public function __construct($root) 
 	{
 		$this->root = $root;
-		\lib\console::writeStdoutLine("app is starting...");
+		//\lib\console::writeStdoutLine("app is starting...");
 		$this->init();
 	}
 	private function init() 
@@ -51,8 +51,13 @@ class app
 						$this->options['silient'] = false;
 						break;
 					case '--help':
-					case '-h':						
+					case '-h':	
 						$this->help();
+						break;	
+					case '--jobchain':
+					case '-j':	
+						$this->showAllJobchain();
+						break;					
 					default:
 						
 						break;
@@ -65,8 +70,13 @@ class app
 				$this->parseChain($argv[1]);
 			}
 		}
+		else
+		{
+			$this->help();
+		}
 		//\lib\console::writeStdoutLine(count($argv));
 	}
+
 	private function initEnv()
 	{
 		$env = [
@@ -88,8 +98,17 @@ curl scripts v1.0
     -h/--help show those message
     -l/--lineoutput show stdoutput with line seperator
     -s/--silient show silient message
+    -j/--jobchain show all jobchains
 		');
 
+	}
+	private function showAllJobchain()
+	{
+		foreach( glob($this->root.'/job-chain/*') as $filename )
+		{
+
+	 		\lib\console::writeStdoutLine(pathinfo($filename,PATHINFO_BASENAME));
+        }
 	}
 	private function parseChain($name)
 	{

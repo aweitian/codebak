@@ -8,7 +8,7 @@ class cmd
 	const RETURN_TYPE_RAW = '-';
 	const RETURN_TYPE_DEFAULT = '-';
 	public $cmd;
-	public $retType;
+	public $retType = '-';
 	public $argv;
 	public $check;
 	public $defChk = true;
@@ -54,24 +54,31 @@ class cmd
 		{
 			$line = trim($line);
 			$tmp = explode(" ",$line,2);
+			$f_type = false;
 			if(count($tmp) == 2)
 			{
 				$cmd = $tmp[0];
 
 				if(\lib\utility::startsWith($cmd,"[]:"))
 				{				
-					$cmd = substr($cmd, 3);
-					$this->setReturnType(self::RETURN_TYPE_ARRAY);
+					$cmd  = substr($cmd, 3);
+					$type = self::RETURN_TYPE_ARRAY;
+					$f_type = true;
 				}
 				else if(\lib\utility::startsWith($cmd,"-:"))
 				{
 					$cmd = substr($cmd, 2);
-					$this->setReturnType(self::RETURN_TYPE_RAW);
+					$type = self::RETURN_TYPE_RAW;
+					$f_type = true;
 				}
 				
 				if($alias == $cmd)
 				{
 					$this->cmd = $tmp[1];
+					if($f_type)
+					{
+						$this->setReturnType($type);
+					}
 					return;
 				}
 			}
@@ -118,6 +125,7 @@ class cmd
 		{
 			$cmd->setCheck($check);
 		}
+
 		if($f_set_type)
 		{
 			$cmd->setReturnType($type);

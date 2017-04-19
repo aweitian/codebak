@@ -11,9 +11,13 @@ class httppost extends http
 	public function request($url, $data, $timeout = 10) 
 	{
 		if (!$url) return false;
+		if($this->useCache && file_exists($path = $this->getCachePath($url)))
+		{
+			return file_get_contents($path);
+		}
 		if ($data) 
 		{
-			$data = http_build_query($data);
+			//$data = http_build_query($data);
 		}
 		$ssl = substr($url, 0, 8) == 'https://' ? true : false;
 		$curl = curl_init();
@@ -39,6 +43,10 @@ class httppost extends http
 		{
 			\lib\console::writeStderrLine("Error >>> httpget request code($curl_errno)");
 			return false;
+		}
+		if($this->useCache)
+		{
+			$this->cache($url,$content);
 		}
 		return $content;
 	}

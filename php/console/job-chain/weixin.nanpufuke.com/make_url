@@ -1,0 +1,12 @@
+<?php
+require_once(dirname(dirname(__DIR__))."/lib/autoload.php");
+$input = \lib\console::readStdin();
+$tpl = 'https://wy.guahao.com/json/white/expertComment/e-__ID__/1-0?page=__PAGE__&diseaseId=0&commentType=all&hospitalId=&_=1492478760159';
+//因为是别名，所以10的参数索引为2
+for ($i=0; $i < \lib\console::getArgv('page',10); $i++) 
+{ 
+	\lib\console::writeStdoutLine(strtr($tpl,[
+		'__ID__' => $input,
+		'__PAGE__' => $i + 1
+	]));
+}
