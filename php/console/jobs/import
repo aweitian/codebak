@@ -1,8 +1,19 @@
 <?php
 require_once(dirname(__DIR__)."/lib/autoload.php");
+$env = json_decode(file_get_contents(__DIR__.'/../runtime/.env'),true);
+$jobchain = $env['jobchain'];
 if($argc < 2)
 {
 	\lib\console::writeStdErrLine("Usage: import filepath");
+	exit;
+}
+if(file_exists($path = __DIR__."/../jobchain/$jobchain/data/".$argv[1]))
+{
+	$input = file($path);
+	foreach ($input as $value) 
+	{
+		\lib\console::writeStdoutLine(trim($value));
+	}
 	exit;
 }
 if (!file_exists($path = __DIR__."/../data/".$argv[1]) && !file_exists($path = $argv[1])) 
