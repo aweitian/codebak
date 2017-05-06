@@ -259,15 +259,15 @@ curl scripts v1.0
 			"JOB_CHAIN" => $this->jobchain,
 		];
 	}
-	private function parseLine($cmd)
-	{
-		$cmd = trim($cmd);
-		if ($cmd == '' || \lib\utility::startsWith($cmd,'//')) 
-		{
-			continue;
-		}
-		$this->makdCmd($cmd);
-	}
+	// private function parseLine($cmd)
+	// {
+	// 	$cmd = trim($cmd);
+	// 	if ($cmd == '' || \lib\utility::startsWith($cmd,'//')) 
+	// 	{
+	// 		continue;
+	// 	}
+	// 	$this->makdCmd($cmd);
+	// }
 	private function makeCmd($line)
 	{
 		return \app\cmd::make($line);

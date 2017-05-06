@@ -1,0 +1,8 @@
+<?php
+require_once(dirname(dirname(__DIR__))."/lib/autoload.php");
+$input = \lib\console::readStdin();
+\lib\console::writeStdoutLine($input);
+\lib\console::writeStdoutLine('---===---');
+\lib\console::writeStdoutLine('480');
+\lib\console::writeStdoutLine('500');
+\lib\console::writeStdoutLine('520');

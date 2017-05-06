@@ -3,3 +3,5 @@
 [wowgear] read wowgear.txt
 echoo
 dkr
+exec secdkr
+dkr

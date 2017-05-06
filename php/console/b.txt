@@ -1,0 +1,113 @@
+Warrior - ProtectionWarrior - 480
+Warrior - ProtectionWarrior - 500
+Warrior - ProtectionWarrior - 520
+Warrior - ArmsWarrior - 480
+Warrior - ArmsWarrior - 500
+Warrior - ArmsWarrior - 520
+Warrior - FuryWarrior - 480
+Warrior - FuryWarrior - 500
+Warrior - FuryWarrior - 520
+
+Mage - FrostMage - 480
+Mage - FrostMage - 500
+Mage - FrostMage - 520
+Mage - FireMage - 480
+Mage - FireMage - 500
+Mage - FireMage - 520
+Mage - ArcaneMage - 480
+Mage - ArcaneMage - 500
+Mage - ArcaneMage - 520
+
+Rogue - OutlawRogue - 480
+Rogue - OutlawRogue - 500
+Rogue - OutlawRogue - 520
+Rogue - SubtletyRogue - 480
+Rogue - SubtletyRogue - 500
+Rogue - SubtletyRogue - 520
+Rogue - AssassinationRogue - 480
+Rogue - AssassinationRogue - 500
+Rogue - AssassinationRogue - 520
+
+Priest - HolyPriest - 480
+Priest - HolyPriest - 500
+Priest - HolyPriest - 520
+Priest - DisciplinePriest - 480
+Priest - DisciplinePriest - 500
+Priest - DisciplinePriest - 520
+Priest - ShadowPriest - 480
+Priest - ShadowPriest - 500
+Priest - ShadowPriest - 520
+
+Hunter - SurvivalHunter - 480
+Hunter - SurvivalHunter - 500
+Hunter - SurvivalHunter - 520
+Hunter - BeastMasteryHunter - 480
+Hunter - BeastMasteryHunter - 500
+Hunter - BeastMasteryHunter - 520
+Hunter - MarksmanshipHunter - 480
+Hunter - MarksmanshipHunter - 500
+Hunter - MarksmanshipHunter - 520
+
+Shaman - RestorationShaman - 480
+Shaman - RestorationShaman - 500
+Shaman - RestorationShaman - 520
+Shaman - EnhancementShaman - 480
+Shaman - EnhancementShaman - 500
+Shaman - EnhancementShaman - 520
+Shaman - ElementalShaman - 480
+Shaman - ElementalShaman - 500
+Shaman - ElementalShaman - 520
+
+Druid - BalanceDruid - 480
+Druid - BalanceDruid - 500
+Druid - BalanceDruid - 520
+Druid - FeralDruid - 480
+Druid - FeralDruid - 500
+Druid - FeralDruid - 520
+Druid - GuardianDruid - 480
+Druid - GuardianDruid - 500
+Druid - GuardianDruid - 520
+Druid - RestorationDruid - 480
+Druid - RestorationDruid - 500
+Druid - RestorationDruid - 520
+
+Paladin - ProtectionPaladin - 480
+Paladin - ProtectionPaladin - 500
+Paladin - ProtectionPaladin - 520
+Paladin - HolyPaladin - 480
+Paladin - HolyPaladin - 500
+Paladin - HolyPaladin - 520
+Paladin - RetributionPaladin - 480
+Paladin - RetributionPaladin - 500
+Paladin - RetributionPaladin - 520
+
+Warlock - DestructionWarlock - 480
+Warlock - DestructionWarlock - 500
+Warlock - DestructionWarlock - 520
+Warlock - DemonologyWarlock - 480
+Warlock - DemonologyWarlock - 500
+Warlock - DemonologyWarlock - 520
+Warlock - AfflictionWarlock - 480
+Warlock - AfflictionWarlock - 500
+Warlock - AfflictionWarlock - 520
+
+Deathknight - UnholyDeathknight - 480
+Deathknight - UnholyDeathknight - 500
+Deathknight - UnholyDeathknight - 520
+Deathknight - FrostDeathknight - 480
+Deathknight - FrostDeathknight - 500
+Deathknight - FrostDeathknight - 520
+Deathknight - BloodDeathknight - 480
+Deathknight - BloodDeathknight - 500
+Deathknight - BloodDeathknight - 520
+
+Monk - WindwalkerMonk - 480
+Monk - WindwalkerMonk - 500
+Monk - WindwalkerMonk - 520
+Monk - BrewmasterMonk - 480
+Monk - BrewmasterMonk - 500
+Monk - BrewmasterMonk - 520
+Monk - MistweaverMonk - 480
+Monk - MistweaverMonk - 500
+Monk - MistweaverMonk - 520
+
