@@ -1,0 +1,8 @@
+<?php
+require_once(dirname(dirname(__DIR__))."/lib/autoload.php");
+$input = \lib\console::readStdin();
+$tmp = explode('experience/', $input);
+if(count($tmp) == 2)
+{
+	\lib\console::writeStdout($tmp[1]);
+}

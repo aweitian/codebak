@@ -1,0 +1,12 @@
+<?php
+require_once(dirname(dirname(__DIR__))."/lib/autoload.php");
+$input = \lib\console::readStdin();
+$data = explode(',', $input);
+function merge_sort($arr)
+{
+	//分两步，第一步拆分，第二步合并
+	
+}
+
+
+\lib\console::writeStdout(join(',',$output));

@@ -202,7 +202,39 @@ curl scripts v1.0
 		$output = $this->execCmd($cmd,$stdin);
 		if($cmd->isArrayReturn())
 		{
-			$cmd = explode("\n",$output);
+			if ($cmd->delimiter == "\n") 
+			{
+				$cmd = explode("\n",$output);
+			}
+			else
+			{
+
+				if(!\lib\utility::startsWith($cmd->delimiter,"\\"))
+				{
+					$cls = "\\delimiter\\" . $cmd->delimiter;
+				}
+				else
+				{
+					$cls = $cmd->check;
+				}
+				try
+				{
+					$rc = new \ReflectionClass($cls);
+				}
+				catch(\ReflectionException $e)
+				{
+					\lib\console::writeStderrLine("delimiter class: ($cls) not found.");
+					return;
+				}
+				if (!$rc->implementsInterface("\\lib\\IDelimiter"))
+				{
+					\lib\console::writeStderrLine("invalid cmd:" . $this->cmdList[$cur]);
+					return;
+				}
+				$controller = $rc->newInstance();
+				$method = $rc->getMethod("split");
+				$cmd = $method->invokeArgs($controller, array($output));
+			}
 			foreach($cmd as $c)
 			{
 				$this->execCmdList($c,$cur+1);

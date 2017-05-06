@@ -1,0 +1,48 @@
+Warrior
+			ProtectionWarrior
+			ArmsWarrior
+			FuryWarrior
+Mage
+			FrostMage
+			FireMage
+			ArcaneMage
+Rogue
+			OutlawRogue
+			SubtletyRogue
+			AssassinationRogue
+Priest
+			HolyPriest
+			DisciplinePriest
+			ShadowPriest
+Hunter
+			SurvivalHunter
+			BeastMasteryHunter
+			MarksmanshipHunter
+Shaman
+			RestorationShaman
+			EnhancementShaman
+			ElementalShaman
+Druid
+			BalanceDruid
+			FeralDruid
+			GuardianDruid
+			RestorationDruid
+Paladin
+			ProtectionPaladin
+			HolyPaladin
+			RetributionPaladin
+Warlock
+			DestructionWarlock
+			DemonologyWarlock
+			AfflictionWarlock
+Deathknight
+			UnholyDeathknight
+			FrostDeathknight
+			BloodDeathknight
+Monk
+			WindwalkerMonk
+			BrewmasterMonk
+			MistweaverMonk
+Hunter
+			HavocDemonHunter
+			VengeanceDemonHunter

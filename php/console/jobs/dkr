@@ -1,0 +1,39 @@
+<?php
+require_once(dirname(__DIR__)."/lib/autoload.php");
+//数据从STDIN传入，代码为ARGV[1]
+/*
+aaaa
+bbbb
+cccc
+---===---
+dddd
+eeee
+把\n\n分隔的做笛卡尔乘积
+*/
+*/
+$delimiter = \lib\console::getArgv("delimiter","---===---");
+$glue = \lib\console::getArgv("gule","-");
+$gulespace = \lib\console::getArgv("gulespace",true);
+if ($gulespace === true) 
+{
+	$gule = ' ' . $gule . ' ';
+}
+$input = \lib\console::readStdin();
+$data = explode($delimiter, $input,2);
+if(count($data) != 2)
+{
+	exit;
+}
+$a = explode("\n", $data[0]);
+$b = explode("\n", $data[1]);
+foreach ($a as $aa) 
+{
+	$v = trim($aa);
+	if(!$v)continue;
+	foreach ($b as $bb) 
+	{
+		$bbb = trim($bb);
+		if(!$bbb)continue;
+		\lib\console::writeStdoutLine($v.$gule.$bbb);
+	}
+}

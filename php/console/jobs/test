@@ -1,5 +1,5 @@
 <?php
 require_once(dirname(__DIR__)."/lib/autoload.php");
 //数据从STDIN传入，代码为ARGV[1]
-$cmd = \app\cmd::make('exec url_filter');
+$cmd = \app\cmd::make('[balala] exec url_filter');
 var_dump($cmd);

@@ -1,0 +1,9 @@
+<?php
+require_once(dirname(dirname(__DIR__))."/lib/autoload.php");
+$num = \lib\console::getArgv('num',10);
+$output = [];
+for ($i=0; $i < $num; $i++) 
+{ 
+	$output[] = rand(0,2 * $num);
+}
+\lib\console::writeStdout(join(',',$output));

@@ -1,6 +1,8 @@
 <?php
 //conf/alias文件为CMD的别名文件，格式为([]|-:)alias balabala....
 //其中括号中为可选返回类型,返回类型优先级为命令中自带最高，别名返回类型次之，最后为默认返回
+//命令格式为
+//		>|filter [delimiter] []:alias/cmd args
 namespace app;
 class cmd
 {
@@ -12,12 +14,12 @@ class cmd
 	public $argv;
 	public $check;
 	public $defChk = true;
+	public $delimiter = "\n";
 	public function __construct($cmd,$argv = [])
 	{
 		$this->setDefChk();
 		$this->aliasCmd($cmd);
 		$this->argv = $argv;
-		
 	}
 	public function getCmd()
 	{
@@ -31,9 +33,10 @@ class cmd
 	{
 		$cmd = trim($cmd);
 		//分析是否带返回类型
-		if(\lib\utility::startsWith($cmd,"[]:"))
+		if(preg_match("/^\[(\w*)\]:/",$cmd,$m))
 		{
-			$cmd = substr($cmd, 3);
+			$cmd = substr($cmd, strlen($m[0]));
+			$this->delimiter = $m[1];
 			$this->alias($cmd);
 			$this->setReturnType(self::RETURN_TYPE_ARRAY);
 		}
@@ -55,13 +58,20 @@ class cmd
 			$line = trim($line);
 			$tmp = explode(" ",$line,2);
 			$f_type = false;
+
+			$f_delimiter = false;
 			if(count($tmp) == 2)
 			{
 				$cmd = $tmp[0];
 
-				if(\lib\utility::startsWith($cmd,"[]:"))
+				if(preg_match("/^\[(\w*)\]:/",$cmd,$m))
 				{				
-					$cmd  = substr($cmd, 3);
+					$cmd = substr($cmd, strlen($m[0]));
+					if(!!$m[1])
+					{
+						$delimiter = $m[1];
+						$f_delimiter = true;
+					}
 					$type = self::RETURN_TYPE_ARRAY;
 					$f_type = true;
 				}
@@ -79,6 +89,10 @@ class cmd
 					{
 						$this->setReturnType($type);
 					}
+					if($f_delimiter)
+					{
+						$this->delimiter = $delimiter;
+					}
 					return;
 				}
 			}
@@ -88,7 +102,7 @@ class cmd
 	static public function make($line)
 	{
 		$line = trim($line);
-
+		$f_delimiter = false;
 		$f_set_chk = false;
 		$check = false;
 		$f_set_type = false;
@@ -100,12 +114,18 @@ class cmd
 			$f_set_chk = true;
 		}
 		$line = trim($line);
-		if(\lib\utility::startsWith($line,"[] "))
+		if(preg_match("/^\[(\w*)\] /",$line,$m))
 		{
-			$line = substr($line, 3);
+			$line = substr($line, strlen($m[0]));
+			if(!!$m[1])
+			{
+				$delimiter = $m[1];
+				$f_delimiter = true;
+			}
 			$type = self::RETURN_TYPE_ARRAY;
 			$f_set_type = true;
 		}
+
 		else if(\lib\utility::startsWith($line,"- "))
 		{
 			$line = substr($line, 2);
@@ -125,7 +145,10 @@ class cmd
 		{
 			$cmd->setCheck($check);
 		}
-
+		if($f_delimiter)
+		{
+			$cmd->delimiter = $delimiter;
+		}
 		if($f_set_type)
 		{
 			$cmd->setReturnType($type);
