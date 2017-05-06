@@ -1,11 +1,5 @@
 //grub info post to weixin.nanpufuke.com
 
-read wowgear.txt
-exec url_filter
-exec doctor_id
-[] exec make_url --page=10
->|urlchk get
-[] exec make_obj
-exec make_submit_data
-post --nocache
-//utf82gbk
+[wowgear] read wowgear.txt
+echoo
+dkr

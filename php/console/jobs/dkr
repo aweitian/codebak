@@ -10,18 +10,19 @@ dddd
 eeee
 把\n\n分隔的做笛卡尔乘积
 */
-*/
+
 $delimiter = \lib\console::getArgv("delimiter","---===---");
 $glue = \lib\console::getArgv("gule","-");
 $gulespace = \lib\console::getArgv("gulespace",true);
 if ($gulespace === true) 
 {
-	$gule = ' ' . $gule . ' ';
+	$glue = ' ' . $glue . ' ';
 }
 $input = \lib\console::readStdin();
 $data = explode($delimiter, $input,2);
 if(count($data) != 2)
 {
+	\lib\console::writeStderrLine('invalid data:'.$input);
 	exit;
 }
 $a = explode("\n", $data[0]);
@@ -34,6 +35,6 @@ foreach ($a as $aa)
 	{
 		$bbb = trim($bb);
 		if(!$bbb)continue;
-		\lib\console::writeStdoutLine($v.$gule.$bbb);
+		\lib\console::writeStdoutLine($v.$glue.$bbb);
 	}
 }

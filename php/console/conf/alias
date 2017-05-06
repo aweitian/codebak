@@ -6,3 +6,4 @@ gbk2utf8 php jobs\\gbk2utf8
 utf82gbk php jobs\\utf82gbk
 echoo php jobs\\echoo
 dkr php jobs\\dkr
+read php jobs\\read
