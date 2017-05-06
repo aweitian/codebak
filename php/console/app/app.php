@@ -172,6 +172,9 @@ curl scripts v1.0
 			{
 				$cls = $cmd->check;
 			}
+			if(!class_exists($cls) && file_exists($dp = $this->root.'/job-chain/'.$this->jobchain.'/filter/'.$cmd->check.'.php')) {
+				require_once $dp;
+			}
 			try
 			{
 				$rc = new \ReflectionClass($cls);
@@ -216,6 +219,9 @@ curl scripts v1.0
 				else
 				{
 					$cls = $cmd->check;
+				}
+				if(!class_exists($cls) && file_exists($dp = $this->root.'/job-chain/'.$this->jobchain.'/delimiter/'.$cmd->delimiter.'.php')) {
+					require_once $dp;
 				}
 				try
 				{
