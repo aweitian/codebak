@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no">
+    <meta http-equiv=”X-UA-Compatible” content=”IE=edge,chrome=1″/>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="format-detection" content="telephone=no">
+    <title> </title>
+    <link rel="stylesheet" type="text/css" href="css/common.css">
+    <link rel="stylesheet" type="text/css" href="css/main.css">
+</head>
+<body>
+    <div class="wrap submit">
+        <header class="header">
+                <a class="s-back" href="?r=showIndex">返回</a>
+                <a class="s-close" href="?r=showIndex">关闭</a>
+                <span>关闭页面</span>
+                <a class="s-dolt" href=""><img src="images/dian.png" alt=""></a>
+        </header>
+
+        <p>请务必填写真实信息,您的信息我们将严格保密。</p>
+        <div class="form">
+            <form action="http://weixin.sh9l.com/insertyuyue.php" method="post">
+                <input type="hidden" name="doctor" value="46">
+                <input type="hidden" name="member_sex" value="0">
+                <input type="hidden" name="content" value="勃起不坚、性生活时间短">
+                <label> <span>联系方式</span><input type="text" name="phone" value="" placeholder="请输入联系方式"></label>
+                <label> <span>姓 名</span><input type="text" name="name" value="" placeholder="请输入真实姓名"></label>
+                <label> <span>就诊日期</span><input type="text" name="date" value="<?php print date('Y-m-d',time())?>" placeholder="请输入就诊日期"></label>
+                <input type="submit" name="" value="提交">
+            </form>
+        </div>
+    </div>
+    <script src="js/base.js"></script>
+</body>
+</html>

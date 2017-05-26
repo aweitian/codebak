@@ -1,0 +1,40 @@
+﻿
+/*
+************  重置  *************
+*/
+* {
+    margin: 0;
+    padding: 0;
+}
+
+img{
+    max-width:100%;
+    border: none;
+    vertical-align: top;
+}
+a{
+    color: #333;
+    text-decoration: none;
+}
+
+h1, h2, h3, h4, h5, h6 ,strong{
+    font-weight: normal; }
+em,b,i{
+    font-style: normal;
+}
+ul,li{
+    list-style: none;
+}
+ul:after {
+    content: '';
+    display: block;
+    clear: both;
+}
+.clearfix {
+    display: block;
+    clear: both;
+}
+
+body{
+    font-size: .24rem;
+}
