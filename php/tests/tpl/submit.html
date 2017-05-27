@@ -22,17 +22,47 @@
 
         <p>请务必填写真实信息,您的信息我们将严格保密。</p>
         <div class="form">
-            <form action="http://weixin.sh9l.com/insertyuyue.php" method="post">
+            <form id="submit" action="http://weixin.sh9l.com/insertyuyue.php" method="post">
                 <input type="hidden" name="doctor" value="46">
                 <input type="hidden" name="member_sex" value="0">
-                <input type="hidden" name="content" value="勃起不坚、性生活时间短">
-                <label> <span>联系方式</span><input type="text" name="phone" value="" placeholder="请输入联系方式"></label>
-                <label> <span>姓 名</span><input type="text" name="name" value="" placeholder="请输入真实姓名"></label>
-                <label> <span>就诊日期</span><input type="text" name="date" value="<?php print date('Y-m-d',time())?>" placeholder="请输入就诊日期"></label>
-                <input type="submit" name="" value="提交">
+                <input type="hidden" name="content" value="<?php print $this->lvtxt;?>">
+                <label> <span>联系方式</span><input id="phone" type="text" name="phone" value="" placeholder="请输入手机号码"></label>
+                <label> <span>姓 名</span><input id="name" type="text" name="name" value="" placeholder="请输入真实姓名"></label>
+                <label> <span>就诊日期</span><input type="text" name="date" onfocus="WdatePicker()" value="<?php print date('Y-m-d',time())?>" placeholder="请输入就诊日期"></label>
+                <input id="btn" type="submit" name="" value="提交">
             </form>
         </div>
     </div>
     <script src="js/base.js"></script>
+	<script src="date/WdatePicker.js"></script>
+	 <script>
+        window.onload=function() {
+
+            var tel= document.getElementById("phone");
+            var name= document.getElementById("name");
+		
+            var oSubmit = document.getElementById("submit");
+
+            oSubmit.onsubmit=function(){
+                return submit(tel,name);	
+            }
+
+        }
+
+        function submit(phone,name){
+                 if(!(/^(13[0-9]|14[5|7]|15[0|1|2|3|5|6|7|8|9]|18[0|1|2|3|5|6|7|8|9])\d{8}$/.test(phone.value)))
+                {
+                    alert("手机号码有误，请填写");
+                    return false;
+                }
+
+                if(name.value =="")
+                {
+                    alert("请您输入姓名")
+                    return false;
+                }
+				return true;
+            }
+    </script>
 </body>
 </html>

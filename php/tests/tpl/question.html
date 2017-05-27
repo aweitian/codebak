@@ -19,7 +19,7 @@
             <ul id="q<?php print $this->s?>">
 
             <?php foreach($this->question as $i => $q):?>
-                <a href='?<?php print $this->nextQuestion($i)?>'><li><?php print $q[1]?></li></a>
+                <a href='?<?php print $this->nextQuestion($q[0])?>'><li><?php print $q[1]?></li></a>
             <?php endforeach;?>
             </ul>
         </div>

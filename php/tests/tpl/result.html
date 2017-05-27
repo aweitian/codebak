@@ -17,7 +17,7 @@
         <div class="a-content a<?php print $this->level?>">
             <img src="images/a<?php print $this->level?>.png" alt="">
             <a href="<?php print $this->getSwt()?>"></a>
-            <a href="?r=submit"></a>
+            <a href="?r=submit&z=<?php print isset($_GET['z']) ? $_GET['z'] : ''?>"></a>
         </div>
     </div>
 </body>

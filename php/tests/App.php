@@ -9,6 +9,7 @@ class App
 	private $result;
 	private $total;
 	private $level;
+	private $lvtxt;
 	public function __construct()
 	{
 		if (isset($_GET['r'])) 
@@ -38,6 +39,8 @@ class App
 	}
 	public function submit()
 	{
+		$this->initResult();
+		$this->calcLv();
 		$this->showTpl('submit');
 	}
 	public function question()
@@ -72,7 +75,8 @@ class App
 		if($this->s > $this->total)
 		{
 			$this->initResult();
-			$this->showResult();
+			$this->calcLv();
+			$this->showTpl("result");
 			exit;
 		}
 		$key = array_keys($this->question);
@@ -84,7 +88,7 @@ class App
 		$inst = new \Tian\Question2arr();
 		$this->question = $inst->get();
 	}
-	private function showResult()
+	private function calcLv()
 	{
 		if (empty($this->result)) 
 		{
@@ -122,7 +126,8 @@ class App
 				$found_key = end(array_keys($this->result));
 			}
 		}
-		switch ($found_key) 
+		$this->lvtxt = $found_key;
+		switch ($this->lvtxt) 
 		{
 			case '重度':
 				$this->level = 1;
@@ -142,12 +147,8 @@ class App
 				
 				break;
 		}
-		$this->showDiffResult();
 	}
-	private function showDiffResult()
-	{
-		$this->showTpl("result");
-	}
+
 	private function initResult()
 	{
 		$inst = new \Tian\Result2arr();
