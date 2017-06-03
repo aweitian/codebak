@@ -10,8 +10,12 @@ class App
 	private $total;
 	private $level;
 	private $lvtxt;
+	private $routeTable = [];
+	private $config = [];
 	public function __construct()
 	{
+		$this->routeTable = parse_ini_file('conf/guide.txt');
+		$this->config = parse_ini_file('conf/config.txt');
 		if (isset($_GET['r'])) 
 		{
 			$this->r = $_GET['r'];
@@ -31,17 +35,18 @@ class App
 		
 	public function showIndex()
 	{
-		$this->showTpl('second');
+		//var_dump(parse_ini_file('conf/guide.txt'));exit;
+		$this->showTpl($this->routeTable['index']);
 	}
 	public function guide()
 	{
-		$this->showTpl('first');
+		$this->showTpl($this->routeTable['guide']);
 	}
 	public function submit()
 	{
 		$this->initResult();
 		$this->calcLv();
-		$this->showTpl('submit');
+		$this->showTpl($this->routeTable['submit']);
 	}
 	public function question()
 	{
@@ -50,7 +55,7 @@ class App
 		else
 			$this->s = 1;
 		$this->beforeShowQuestion();
-		$this->showTpl('question');
+		$this->showTpl($this->routeTable['question']);
 	}
 	private function showTpl($tpl,$env=array())
 	{
@@ -76,7 +81,7 @@ class App
 		{
 			$this->initResult();
 			$this->calcLv();
-			$this->showTpl("result");
+			$this->showTpl($this->routeTable["result"]);
 			exit;
 		}
 		$key = array_keys($this->question);
@@ -102,51 +107,20 @@ class App
 		$score = array_reduce(str_split($_GET['z']), function($a,$b){
 			return $a+$b;
 		},0) ;
-		$found_key = '';
+		//分数不合理，使用最小值 ,所以这里设置为0
+		$found_index = 0;
+		$pos = 0;
 		foreach($this->result as $k => $r)
 		{
 			if ($score >= $r[0] && $score <= $r[1]) 
 			{
-				$found_key = $k;
+				$this->lvtxt = $k;
+				$found_index = $pos;
 				break;
 			}
+			$pos++;
 		}
-		if (!$found_key) 
-		{
-			//分数不合理，使用最小值 
-			//exit('分数不合理，使用最小值');
-			$f = current($this->result);
-			$e = end($this->result);
-			if($f[0] > $e[0])
-			{
-				$found_key = current(array_keys($this->result));
-			}
-			else
-			{
-				$found_key = end(array_keys($this->result));
-			}
-		}
-		$this->lvtxt = $found_key;
-		switch ($this->lvtxt) 
-		{
-			case '重度':
-				$this->level = 1;
-				break;
-			case '中度':
-				$this->level = 2;
-				break;
-			case '中轻度':
-				$this->level = 3;
-				break;
-			case '轻度':
-				$this->level = 4;
-				break;
-			case '不存在':
-			default:
-				$this->level = 5;
-				
-				break;
-		}
+		$this->level = $found_index + 1;
 	}
 
 	private function initResult()

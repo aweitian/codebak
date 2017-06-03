@@ -13,12 +13,23 @@
 </head>
 <body>
     <div class="wrap ask">
-        <img src="images/ask.png" alt="" />
-        <div class="a-content a<?php print $this->level?>">
-            <img src="images/a<?php print $this->level?>.png" alt="">
+        <img src="images/ap<?php print $this->level?>.png" alt="" />
+
+            <div class="a-box"><img src="images/at<?php print $this->level?>.png" alt="" />
+
+                <p>
+                <?php
+                print $this->lvtxt
+                ?>
+                
+                </p>
+            </div>
+        <div class="a-content">
+
             <a href="<?php print $this->getSwt()?>"></a>
             <a href="?r=submit&z=<?php print isset($_GET['z']) ? $_GET['z'] : ''?>"></a>
         </div>
     </div>
+    <script src="js/base.js"></script>
 </body>
 </html>
