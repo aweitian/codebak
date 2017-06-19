@@ -6,6 +6,7 @@ class App
 	private $r;
 	private $s;
 	private $question;
+	private $options;
 	private $result;
 	private $total;
 	private $level;
@@ -85,13 +86,15 @@ class App
 			exit;
 		}
 		$key = array_keys($this->question);
-		$key = $key[$this->s - 1];
-		$this->question = $this->question[$key];
+		$question = $key[$this->s - 1];
+		$this->options = $this->question[$question];
+		$this->question = $question;
 	}
 	private function initQuestion()
 	{
 		$inst = new \Tian\Question2arr();
 		$this->question = $inst->get();
+		//var_dump($this->question);exit;
 	}
 	private function calcLv()
 	{

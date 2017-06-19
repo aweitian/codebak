@@ -10,26 +10,29 @@
     <title> </title>
     <link rel="stylesheet" type="text/css" href="css/common.css">
     <link rel="stylesheet" type="text/css" href="css/main.css">
+    <script type="text/javascript" src="js/base.js"></script>
+    
 </head>
 <body>
-    <div class="wrap ask">
-        <img src="images/ap<?php print $this->level?>.png" alt="" />
+   
+    <div class="wrap a<?php print $this->level?>">
+    	
+    <?php if($this->level == 1):?>
+        <img src="images/a1pic.png" alt="" />
+        <h2>恭喜你，暂时没有肾虚症状</h2>
+        <p>平常可多吃黑色食物，如黑芝麻、黑米、黑豆、黑木耳等。此外，核桃、板栗、枸杞、骨髓、猪腰也不错。少吃过度苦寒、冰凉的食物，如苦瓜、鹅肉、啤酒等易伤肾。建议要保持良好的心态，努力控制自己的情绪，避免大喜大悲，少动气。</p>
+        <a href="<?php print $this->getSwt()?>">养肾方法，在线咨询 GO →</a>
 
-            <div class="a-box"><img src="images/at<?php print $this->level?>.png" alt="" />
-
-                <p>
-                <?php
-                print $this->lvtxt
-                ?>
-                
-                </p>
-            </div>
-        <div class="a-content">
-
-            <a href="<?php print $this->getSwt()?>"></a>
-            <a href="?r=submit&z=<?php print isset($_GET['z']) ? $_GET['z'] : ''?>"></a>
-        </div>
+    <?php else:?>
+        
+        <img src="images/a2pic.png" alt="" />
+        <h2>先生，你很可能是肾虚了。</h2>
+        <p>平时要多注意休息保养，必要时，及时去医院检查一下。值得注意的是，在治疗肾虚时，一定要分清肾阳虚和肾阴虚，这样才能避免越治越虚的。</p>
+        <a href="<?php print $this->getSwt()?>">健康咨询</a>
+        <a href="?r=submit&z=<?php print isset($_GET['z']) ? $_GET['z'] : ''?>">专病速珍</a>
+		<div><a href='?r=guide'>测试结果不满意，重新测试</a></div>
+	<?php endif?>
     </div>
-    <script src="js/base.js"></script>
+    
 </body>
 </html>

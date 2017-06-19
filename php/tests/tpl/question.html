@@ -10,21 +10,31 @@
     <title> </title>
     <link rel="stylesheet" type="text/css" href="css/common.css">
     <link rel="stylesheet" type="text/css" href="css/main.css">
-</head>
+    <script type="text/javascript" src="js/base.js"></script>	
 <body>
     <div class="wrap question">
-        <div class="box q<?php print $this->s?>" style="display:block;">
-            <h2><img src="images/t<?php print $this->s?>.png" alt=""></h2>
-            <ul id="q<?php print $this->s?>">
+       
+        <div class="q-box">
+        	<div class="t<?php print $this->s?>"  style="display: block;">
 
-            <?php foreach($this->question as $i => $q):?>
-                <a href='?<?php print $this->nextQuestion($q[0])?>'><li><?php print $q[1]?></li></a>
-            <?php endforeach;?>
-            </ul>
+				
+        		<h2 class="title"><span>Q<?php print $this->s?></span>
+				<p><?php print $this->question ?></p></h2>
+        		
+				<div class="check" id="t<?php print $this->s?>">
+					<?php foreach($this->options as $i => $q):?>
+        			<a href='?<?php print $this->nextQuestion($q[0])?>'>
+						<label>
+							<span></span>
+							<input type="radio" name="a"  value=""  onclick="location.href='?<?php print $this->nextQuestion($q[0])?>'" />
+							<i></i><?php print $q[1]?></li>
+						</label>
+        			</a>
+				<?php endforeach;?>
+        		</div>
+        	</div>
         </div>
-
     </div>
-    <script src="js/base.js"></script>
-   
+    
 </body>
 </html>
