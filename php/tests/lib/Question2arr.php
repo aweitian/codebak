@@ -50,7 +50,7 @@ class Question2arr
 	private function parse($v)
 	{
 		//如果以数字结尾，以这个数字为准
-		if(preg_match("/(\d+)$/",$v,$m))
+		if(preg_match("/([0-9a-fA-F]+)$/",$v,$m))
 		{
 			$s = $m[1];
 			$c = trim(substr($v,0,-1 * strlen($s)));

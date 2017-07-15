@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no">
+    <meta http-equiv=”X-UA-Compatible” content=”IE=edge,chrome=1″/>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="format-detection" content="telephone=no">
+    <title> </title>
+    <link rel="stylesheet" type="text/css" href="css/common.css">
+    <link rel="stylesheet" type="text/css" href="css/main.css">
+    <script type="text/javascript" src="js/base.js"></script>
+    
+</head>
+<body>
+    <div class="wrap answer a<?php print $this->level?>">
+    	<?php if($this->level == "1"):?>
+    	<img src="images/a1p.png" alt="" />
+    	<h2>
+    		27-30分
+    	</h2>
+    	<p>
+    		你对自己的性能力和性吸引力都非常有信心。恭喜你，你的性功能非常强，与你啪啪啪的异性真有福气，请继续保持!
+    	</p>
+    	<a href="<?php print $this->getSwt()?>"></a>
+        <div>测试结果不满意，点击<a href="?r=guide">重新测试</a></div>
+       <?php endif?>
+        	<?php if($this->level == "2"):?>
+    <img src="images/a2p.png" alt="" />
+    	<h2>
+    		13-26分
+    	</h2>
+    	<p>
+    		你轻微的缺乏信心会使你有点害羞。但请放心，大多数人都是如此，你的性功能属于正常范围，可以满足性伴侣!在适当时候可以多学点技巧，做足前戏，便能更胜一筹，锦上添花!如果有一个经验丰富的伴侣来给你指导，他(她)会让你变成一个对自己性能力更加自信的人。
+    	</p>
+    	<a href="<?php print $this->getSwt()?>"><img src="images/zx.png" alt="" /></a>
+    	<a href="?r=submit&z=<?php print isset($_GET['z']) ? $_GET['z'] : ''?>"><img src="images/sz.png" alt="" /></a>
+        <div>测试结果不满意，点击<a href="?r=guide">重新测试</a></div>
+        <?php endif?>
+       <?php if($this->level == "3"):?>
+    	<img src="images/a3p.png" alt="" />
+    	<h2>
+    		6-12分
+    	</h2>
+    	<p>
+    		你是个不够自信的人，无力的自我形象正困扰着你。心理的不自信无形中也会对你的性能力和性吸引力产生影响。你的性功能可能稍弱，建议分析原因，放松心情，不要有心理障碍，会逐渐恢复到正常的!
+    	</p>
+    	<a href="<?php print $this->getSwt()?>"><img src="images/zx.png" alt="" /></a>
+    	<a href="?r=submit&z=<?php print isset($_GET['z']) ? $_GET['z'] : ''?>"><img src="images/sz.png" alt="" /></a>
+        <div>测试结果不满意，点击<a href="?r=guide">重新测试</a></div>
+    </div>
+    <?php endif?>
+    
+</body>
+</html>

@@ -1,6 +1,6 @@
 [guide]
-index=share
-guide=first
+index=first
+guide=second
 question=question
 result=result
 submit=submit

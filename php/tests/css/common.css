@@ -1,40 +1,68 @@
-﻿
-/*
+﻿/*
 ************  重置  *************
 */
+
 * {
-    margin: 0;
-    padding: 0;
+	margin: 0;
+	padding: 0;
 }
 
-img{
-    max-width:100%;
-    border: none;
-    vertical-align: top;
-}
-a{
-    color: #333;
-    text-decoration: none;
+img {
+	max-width: 100%;
+	border: none;
+	vertical-align: top;
 }
 
-h1, h2, h3, h4, h5, h6 ,strong{
-    font-weight: normal; }
-em,b,i{
-    font-style: normal;
+a,
+button,
+input {
+	-webkit-tap-high light-color: rgba(255, 0, 0, 0);
 }
-ul,li{
-    list-style: none;
+
+html {
+	-webkit-text-size-adjust: 100%;
+	-ms-text-size-adjust: 100%
 }
+
+body {
+	font-family: Helvetica, sans-serif, Arial;
+	font-size: .24rem;
+}
+
+a {
+	color: #333;
+	text-decoration: none;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+strong {
+	font-weight: normal;
+}
+
+em,
+b,
+i {
+	font-style: normal;
+}
+
+ul,
+li {
+	list-style: none;
+}
+
 ul:after {
-    content: '';
-    display: block;
-    clear: both;
-}
-.clearfix {
-    display: block;
-    clear: both;
+	content: '';
+	display: block;
+	clear: both;
 }
 
-body{
-    font-size: .24rem;
+.clearfix {
+	display: block;
+	clear: both;
 }
+

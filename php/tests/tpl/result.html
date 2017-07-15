@@ -14,25 +14,47 @@
     
 </head>
 <body>
-   
-    <div class="wrap a<?php print $this->level?>">
-    	
-    <?php if($this->level == 1):?>
-        <img src="images/a1pic.png" alt="" />
-        <h2>恭喜你，暂时没有肾虚症状</h2>
-        <p>平常可多吃黑色食物，如黑芝麻、黑米、黑豆、黑木耳等。此外，核桃、板栗、枸杞、骨髓、猪腰也不错。少吃过度苦寒、冰凉的食物，如苦瓜、鹅肉、啤酒等易伤肾。建议要保持良好的心态，努力控制自己的情绪，避免大喜大悲，少动气。</p>
-        <a href="<?php print $this->getSwt()?>">养肾方法，在线咨询 GO →</a>
-
-    <?php else:?>
-        
-        <img src="images/a2pic.png" alt="" />
-        <h2>先生，你很可能是肾虚了。</h2>
-        <p>平时要多注意休息保养，必要时，及时去医院检查一下。值得注意的是，在治疗肾虚时，一定要分清肾阳虚和肾阴虚，这样才能避免越治越虚的。</p>
-        <a href="<?php print $this->getSwt()?>">健康咨询</a>
-        <a href="?r=submit&z=<?php print isset($_GET['z']) ? $_GET['z'] : ''?>">专病速珍</a>
-		<div><a href='?r=guide'>测试结果不满意，重新测试</a></div>
-	<?php endif?>
+    <div class="wrap answer a1">
+    	<?php if($this->level == "1"):?>
+    	<img src="images/a1.png" alt="" />
+    	 <h2>性商成绩：<span><?php print $this->score ?>分</span></h2>
+    	<p>
+    		你可能存在性冷淡的情况，对性生活感到绝望。建议及时检查就医，寻求改善，重获夫妻性福生活。
+    	</p>
+    	<a href=""></a>
+        <div>测试结果不满意，点击<a href="">重新测试</a></div>
+         <?php endif?>
+        	<?php if($this->level == "2"):?>
+     <img src="images/a2.png" alt="" />
+    	 <h2>性商成绩：<span><?php print $this->score ?>分</span></h2>
+    	<p>
+    		您的性生活状况一般，存在一些勃起，射精功能障碍的小问题，对方颇有言辞建议引起重视，可做泌尿常规检查、性激素水平测试等。
+    	</p>
+    	<a href=""><img src="images/zx.png" alt="" /></a>
+    	<a href=""><img src="images/sz.png" alt="" /></a>
+        <div>测试结果不满意，点击<a href="">重新测试</a></div>
+    <?php endif?>
+        	<?php if($this->level == "3"):?>
+     <img src="images/a3.png" alt="" />
+    	 <h2>性商成绩：<span><?php print $this->score ?>分</span></h2>
+    	<p>
+    		性生活良好，大多数时候都能获得性满足，日常加强锻炼，定期体检，有改善的空间。
+    	</p>
+    	<a href=""><img src="images/zx.png" alt="" /></a>
+    	<a href=""><img src="images/sz.png" alt="" /></a>
+        <div>测试结果不满意，点击<a href="">重新测试</a></div>
+    <?php endif?>
+        	<?php if($this->level == "4"):?>
+    	<img src="images/a4.png" alt="" />
+    	 <h2>性商成绩：<span><?php print $this->score ?>分</span></h2>
+    	<p>
+    		恭喜你，这位先生，您的性生活非常棒，继续加油吧！
+    	</p>
+    	<a href=""><img src="images/zx.png" alt="" /></a>
+    	<a href=""><img src="images/sz.png" alt="" /></a>
+        <div>测试结果不满意，点击<a href="">重新测试</a></div>
     </div>
-    
+     <?php endif?>
+        
 </body>
 </html>

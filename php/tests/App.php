@@ -13,6 +13,7 @@ class App
 	private $lvtxt;
 	private $routeTable = [];
 	private $config = [];
+	private $score;
 	public function __construct()
 	{
 		$this->routeTable = parse_ini_file('conf/guide.txt');
@@ -108,8 +109,9 @@ class App
 			exit;
 		}
 		$score = array_reduce(str_split($_GET['z']), function($a,$b){
-			return $a+$b;
+			return $a+hexdec('0x'.$b);
 		},0) ;
+		$this->score = $score;
 		//分数不合理，使用最小值 ,所以这里设置为0
 		$found_index = 0;
 		$pos = 0;

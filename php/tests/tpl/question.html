@@ -13,23 +13,20 @@
     <script type="text/javascript" src="js/base.js"></script>	
 <body>
     <div class="wrap question">
-       
         <div class="q-box">
-        	<div class="t<?php print $this->s?>"  style="display: block;">
-
-				
-        		<h2 class="title"><span>Q<?php print $this->s?></span>
-				<p><?php print $this->question ?></p></h2>
+        	<span class="num">Q<?php print $this->s?></span>
+        	<div class="t1 t" >
+        		<h3><?php print $this->question ?></h3>
         		
-				<div class="check" id="t<?php print $this->s?>">
-					<?php foreach($this->options as $i => $q):?>
+        		<div class="check" id="t1">
+				<?php foreach($this->options as $i => $q):?>
         			<a href='?<?php print $this->nextQuestion($q[0])?>'>
-						<label>
-							<span></span>
-							<input type="radio" name="a"  value=""  onclick="location.href='?<?php print $this->nextQuestion($q[0])?>'" />
-							<i></i><?php print $q[1]?></li>
-						</label>
-        			</a>
+        			<label>
+        				<span></span>
+        				<input type="radio" name="a"  value=""  onclick="location.href='?<?php print $this->nextQuestion($q[0])?>'" />
+        				<i></i><?php print $q[1]?>
+        			</label>
+				</a>
 				<?php endforeach;?>
         		</div>
         	</div>

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no">
+    <meta http-equiv=”X-UA-Compatible” content=”IE=edge,chrome=1″/>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="format-detection" content="telephone=no">
+    <title> </title>
+    <link rel="stylesheet" type="text/css" href="css/common.css">
+    <link rel="stylesheet" type="text/css" href="css/main.css">
+    <script type="text/javascript" src="js/base.js"></script>	
+<body>
+    <div class="wrap question">
+        <div class="q-box">
+        	<div class="t<?php print $this->s?>" >
+        		<h3><span>Q<?php print $this->s?>.</span><?php print $this->question ?></h3>
+        		<div class="check">
+				<?php foreach($this->options as $i => $q):?>
+        			<a href='?<?php print $this->nextQuestion($q[0])?>'>
+        			<label>
+        				<span></span>
+        				<input type="radio" name="a"  value=""  onclick="location.href='?<?php print $this->nextQuestion($q[0])?>'" />
+        				<i></i><?php print $q[1]?>
+        			</label>
+				</a>
+				<?php endforeach;?>
+        			
+        		</div>
+        	</div>
+        
+        	<!-- <div class="t2"  style="display: block;"> -->
+        		<!-- <h3><span>Q2.</span>您的小弟弟完全挺起时，与双腿的角度有多大?</h3> -->
+        		
+        		<!-- <div class="check" id="t1"> -->
+        			<!-- <label> -->
+        				<!-- <span></span> -->
+        				<!-- <input type="radio" name="a"  value="" /> -->
+        				<!-- <i></i><b>A.</b>高射炮似的，大于120度 -->
+        			<!-- </label> -->
+        			<!-- <label>  -->
+        				<!-- <span></span> -->
+        				<!-- <input type="radio" name="a"  value="" /> -->
+        				<!-- <i></i><b>B.</b>像一挺机枪，90至120度 -->
+        			<!-- </label> -->
+        			<!-- <label>  -->
+        				<!-- <span></span> -->
+        				<!-- <input type="radio" name="a"  value="" /> -->
+        				<!-- <i></i><b>C.</b>勉强能挺着，60至90度 -->
+        			<!-- </label> -->
+        			<!-- <label>  -->
+        				<!-- <span></span> -->
+        				<!-- <input type="radio" name="a"  value="" /> -->
+        				<!-- <i></i><b>D.</b>没精打采的，60度以下 -->
+        			<!-- </label> -->
+        			<!-- <label>  -->
+        				<!-- <span></span> -->
+        				<!-- <input type="radio" name="a"  value="" /> -->
+        				<!-- <i></i><b>E.</b>根本硬不起来 -->
+        			<!-- </label> -->
+        		<!-- </div> -->
+        	<!-- </div> -->
+        	
+        	
+        </div>
+    </div>
+    
+</body>
+</html>
